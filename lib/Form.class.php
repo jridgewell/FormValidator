@@ -5,8 +5,6 @@
  * @license Beerware
  * @link url
  */
-namespace FormValidator;
-
 
 class Form{
 
