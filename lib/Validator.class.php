@@ -4,7 +4,6 @@
  * @license Beerware
  * @link url
  */
-namespace FormValidator;
 
 /* does nothing. useful when you want a input included in the checking array, but not checked */
 define("VALID_DO_NOTHING", -1);
