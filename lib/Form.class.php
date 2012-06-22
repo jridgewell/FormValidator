@@ -12,13 +12,13 @@ class Form {
      * Stores the path of the Forms directory
      * @var String
      */
-    static public $formDirectory = "./Forms/";
+    static public $formDirectory = './Forms/';
 
     /**
      * Stores the name of the css error to be included on elements that don't pass validation
      * @var String
      */
-    static public $cssErrorClass = "Error";
+    static public $cssErrorClass = 'Error';
 
     /**
      * Stores any errors the form has after validation
@@ -52,11 +52,11 @@ class Form {
      */
     static public function loadForm($name) {
         $name = ucfirst($name);
-        $file = self::$formDirectory . $name . ".form.php";
+        $file = self::$formDirectory . $name . '.form.php';
 
         if (file_exists($file)) {
             require_once($file);
-            $class = $name . "Form";
+            $class = $name . 'Form';
             return new $class;
         } else {
             throw new FileDoesntExistException();
@@ -122,7 +122,7 @@ class Form {
         }
 
         // Call the subclass when the verify is finished, so they don't have to override the validation method
-        if (method_exists($this, "verify")) {
+        if (method_exists($this, 'verify')) {
             $this->verify($this->data);
         }
         // Return the data if there isn't any errors
@@ -135,7 +135,7 @@ class Form {
      * @return Boolean
      */
     public function hasPosted() {
-        return $_SERVER['REQUEST_METHOD'] == "POST";
+        return $_SERVER['REQUEST_METHOD'] == 'POST';
     }
 
     /**
@@ -203,16 +203,16 @@ class Form {
                 foreach ($message as $errorCode => $m) {
                     if ($this->ElementHasError($name, $errorCode)) {
                         if ($errorCode == VALID_ERROR_TOOLONG) {
-                            $er[] = "<div>" . sprintf($m, strlen($this->data[$name])) . "</div>";
+                            $er[] = '<div>' . sprintf($m, strlen($this->data[$name])) . '</div>';
                         } else {
-                            $er[] = "<div>$m</div>";
+                            $er[] = '<div>' . $m . '</div>';
                         }
                     }
                 }
                 echo implode("\n", $er);
             } else if (is_string($message)) {
                 if ($this->ElementHasError($name)) {
-                    echo "<div>$message</div>";
+                    echo '<div>' . $message . '</div>';
                 }
             }
         }
@@ -225,16 +225,16 @@ class Form {
      */
     public function input($name, $elementAttributes=Array()) {
         $defaultAttributes = Array(
-            "name"  => $name,
-            "type"  => "text",
-            "value" => ""
+            'name'  => $name,
+            'type'  => 'text',
+            'value' => ''
         );
         $attributes = array_merge($defaultAttributes, $elementAttributes);
 
         // Add the error class if the element has an error
         if ($this->elementHasError($name)) {
             if (isset($attributes['class'])) {
-                $attributes['class'] .= " " . self::$cssErrorClass;
+                $attributes['class'] .= ' ' . self::$cssErrorClass;
             } else {
                 $attributes['class'] = self::$cssErrorClass;
             }
@@ -249,14 +249,14 @@ class Form {
         $a = Array();
         foreach ($attributes as $name => $value) {
             if (is_array($value)) {continue;}
-                $a[] = sprintf("%s='%s'", $name, htmlentities($value, ENT_QUOTES));
+                $a[] = sprintf('%s="%s"', $name, htmlentities($value, ENT_QUOTES));
         }
 
         // Handle textarea needing a different value format
-        if ($attributes['type'] == "textarea") {
-            echo "<textarea " . implode(" ", $a) . ">" . $attributes['value'] . "</textarea>";
+        if ($attributes['type'] == 'textarea') {
+            echo '<textarea ' . implode(' ', $a) . '>' . $attributes['value'] . '</textarea>';
         } else {
-            echo "<input " . implode(" ", $a) . " />";
+            echo '<input ' . implode(' ', $a) . ' />';
         }
     }
 
@@ -266,13 +266,13 @@ class Form {
      */
     public function submitButton($value, $elementAttributes=Array()) {
         if (is_string($value)) {
-            $elementAttributes["value"] = $elementAttributes;
+            $elementAttributes['value'] = $elementAttributes;
         }
         if (isset($elementAttributes['name'])) {
             $elementAttributes['name'] = null;
         }
 
-        $elementAttributes['type'] = "submit";
+        $elementAttributes['type'] = 'submit';
         $this->input(get_class($this), $elementAttributes);
     }
 
@@ -284,8 +284,8 @@ class Form {
      */
     public function select($name, $elementAttributes=Array(), $values=Array(), $useKeys=false) {
         $defaultAttributes = Array(
-            "name" => $name,
-            "type" => "normal",
+            'name' => $name,
+            'type' => 'normal',
         );
 
 
@@ -304,36 +304,36 @@ class Form {
 
         // Handle custom select types
         switch($attributes['type']) {
-        case "timezone" : $values = timezone_identifiers_list(); break;
+        case 'timezone' : $values = timezone_identifiers_list(); break;
         }
         unset($attributes['type']);
 
         // Convert the name/value key pairs into strings
         $a = Array();
         foreach ($attributes as $name => $value) {
-            $a[] = sprintf("%s='%s'", $name, $value);
+            $a[] = sprintf('%s="%s"', $name, $value);
         }
 
         // Echo out the first part of the select element
-        echo "<select " . implode(" ", $a) . " >\n";
+        echo '<select ' . implode(' ', $a) . ' >\n';
 
         // Echo out the values included within the select element
         foreach ($values as $value => $name) {
-            $html = "<option ";
+            $html = '<option ';
 
             if ($useKeys) {
-                $html .= sprintf("value='%s'", htmlentities($value, ENT_QUOTES));
+                $html .= sprintf('value="%s"', htmlentities($value, ENT_QUOTES));
                 if ($selected == $value || $selected == $name) {
-                    $html .= " selected = 'selected' ";
+                    $html .= ' selected="selected" ';
                 }
             } else {
                 if ($selected == $name) {
-                    $html .= " selected = 'selected' ";
+                    $html .= ' selected="selected" ';
                 }
             }
-            echo $html . ">$name</option>\n";
+            echo $html . '>' . $name . '</option>'  . "\n";
         }
-        echo "</select>\n";
+        echo '</select>' . "\n";
     }
 
 }

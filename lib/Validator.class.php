@@ -5,38 +5,38 @@
  * @link url
  */
 
-define("VALIDATE_DO_NOTHING", -14);
-//define("VALIDATE_EMPTY", -13);
-define("VALIDATE_NOT_EMPTY", -12);
-define("VALIDATE_NUMBER", -11);
-define("VALIDATE_STRING", -10);
-define("VALIDATE_EMAIL", -9);
-define("VALIDATE_TIMEZONE", -8);
-define("VALIDATE_URL", -7);
-define("VALIDATE_IN_DATA_LIST", -6);
-define("VALIDATE_CUSTOM", -5);
-define("VALIDATE_LENGTH", -4);
-define("VALIDATE_MUST_MATCH_FIELD", -3);
-define("VALIDATE_MUST_MATCH_REGEX", -2);
-define("VALIDATE_UPLOAD", -1);
+define('VALIDATE_DO_NOTHING', -14);
+//define('VALIDATE_EMPTY', -13);
+define('VALIDATE_NOT_EMPTY', -12);
+define('VALIDATE_NUMBER', -11);
+define('VALIDATE_STRING', -10);
+define('VALIDATE_EMAIL', -9);
+define('VALIDATE_TIMEZONE', -8);
+define('VALIDATE_URL', -7);
+define('VALIDATE_IN_DATA_LIST', -6);
+define('VALIDATE_CUSTOM', -5);
+define('VALIDATE_LENGTH', -4);
+define('VALIDATE_MUST_MATCH_FIELD', -3);
+define('VALIDATE_MUST_MATCH_REGEX', -2);
+define('VALIDATE_UPLOAD', -1);
 
 
 /*
     Standard error codes use these when calling the Form::error function
  */
 
-define("VALIDATE_ERROR_NOT_EMAIL", "email");
-define("VALIDATE_ERROR_EMPTY", "empty");
-define("VALIDATE_ERROR_NOT_CUSTOM", "custom");
-define("VALIDATE_ERROR_NOT_NUMBER", "number");
-define("VALIDATE_ERROR_NOT_STRING", "string");
-define("VALIDATE_ERROR_TOO_SHORT", "stringshort");
-define("VALIDATE_ERROR_TOO_LONG", "stringlong");
-define("VALIDATE_ERROR_NOT_MATCH_FIELD", "matchfield");
-define("VALIDATE_ERROR_NOT_MATCH_REGEX", "matchregexfield");
-define("VALIDATE_ERROR_NOT_TIMEZONE", "timezone");
-define("VALIDATE_ERROR_NOT_IN_LIST", "inlist");
-define("VALIDATE_ERROR_NOT_URL", "url");
+define('VALIDATE_ERROR_NOT_EMAIL', 'email');
+define('VALIDATE_ERROR_EMPTY', 'empty');
+define('VALIDATE_ERROR_NOT_CUSTOM', 'custom');
+define('VALIDATE_ERROR_NOT_NUMBER', 'number');
+define('VALIDATE_ERROR_NOT_STRING', 'string');
+define('VALIDATE_ERROR_TOO_SHORT', 'stringshort');
+define('VALIDATE_ERROR_TOO_LONG', 'stringlong');
+define('VALIDATE_ERROR_NOT_MATCH_FIELD', 'matchfield');
+define('VALIDATE_ERROR_NOT_MATCH_REGEX', 'matchregexfield');
+define('VALIDATE_ERROR_NOT_TIMEZONE', 'timezone');
+define('VALIDATE_ERROR_NOT_IN_LIST', 'inlist');
+define('VALIDATE_ERROR_NOT_URL', 'url');
 
 
 class Validator {
@@ -91,7 +91,7 @@ class Validator {
                         return true;
                     }
 
-                    if (isset($params["searchKeys"]) && $params["searchKeys"]) {
+                    if (isset($params['searchKeys']) && $params['searchKeys']) {
                         if (in_array($value, array_keys($list))) {
                             return true;
                         }
@@ -101,7 +101,7 @@ class Validator {
                         return true;
                     }
 
-                    if (isset($params["searchKeys"]) && $params["searchKeys"]) {
+                    if (isset($params['searchKeys']) && $params['searchKeys']) {
                         if (in_array($value, array_keys($params['list']))) {
                             return true;
                         }
