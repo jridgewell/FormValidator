@@ -16,24 +16,24 @@ In this example, the form validator checks if name isn't empty
 		class TestForm extends Form{
 			public $validation = Array( // Contains a hash array of form elements
 				"name" => VALID_NOT_EMPTY // name field must contain something
-			); 
+			);
 		}
-		
-		
+
+
 
 Then to use this form, in our controller we initialize our form, then check if it submitted, and if it's valid
-		
+
 		index.php
 
 		$form = new FormValidator\TestForm();
-		
-		/* Checks if the form has submitted then the form is checked for validation against the rules contained 
+
+		/* Checks if the form has submitted then the form is checked for validation against the rules contained
 		within the $validation array of TestForm returning the post data if its successful
 		*/
-		
+
 		if($form->hasPosted() && ($data = $form->validate())){
 			// Form passes validation, use the POST data contained within $data
-		
+
 		}else{
 			// Form hasn't posted or hasn't passed validation, so we load our html file
 			require_once("form.html.php");
@@ -42,14 +42,14 @@ Then to use this form, in our controller we initialize our form, then check if i
 
 Now in our view we just call $form->error passing in the name of the form field, with the error message to display, and if theres been an error on that form field, it will show the message
 		form.html.php
-		
-		
+
+
 		<form name="input" method="POST">
 		<?php $form->error("name", "There was an error"); ?>
 
 		 Please Enter your name: <?php $form->input("name"); ?><br/>
-		<?php $form->submitButton("Submit"));?>
-		</form> 
+		<?php $form->submitButton("Submit");?>
+		</form>
 
 
 Now having all your form validation in a seperate class, neatens up the controller code, theres also alot of inbuilt options for the $validation array which we'll cover in the next section
@@ -74,27 +74,27 @@ We could do the following
 				"age"   => Array(
 					VALID_NOT_EMPTY,
 					VALID_NUMBER
-				);
-			); 
+				)
+			);
 		}
 
 and in our html file, if we wanted to show different errors for the different age validations we could do the following
 
 		form.html.php
-		
+
 		<form name="input" method="POST">
 		<?php $form->error("name", "There was an error"); ?>
 
 		 Please Enter your name: <?php $form->input("name"); ?><br/>
-		
+
 		<?php $form->error("age", Array(
 			VALID_ERROR_EMPTY            => "Sorry, age can't be left empty",
 			VALID_ERROR_NOT_NUMBER   => "Sorry, age has to be a number"
 		)); ?>
-		
+
 		Please Enter your age: <?php $form->input("name"); ?><br/>
-		<?php $form->submitButton("Submit"));?>
-		</form> 
+		<?php $form->submitButton("Submit");?>
+		</form>
 
 Note: all the error codes can be found within the Validation class
 
@@ -115,10 +115,10 @@ For example to ensure the age value is only between 0-100 we could do the follow
 						"min"  => 0,
 						"max" => 100
 					)
-				);
-			); 
+				)
+			);
 		}
-		
+
 
 #### List of validation array constants
 
@@ -130,18 +130,18 @@ For example to ensure the age value is only between 0-100 we could do the follow
 		VALID_EMAIL:			The field must be a valid email
 		VALID_TIMEZONE:			The field must be a valid timezone
 		VALID_URL:				The field must be a url
-		
+
 		Constants with paramters
-		
+
 		VALID_IN_DATA_LIST:		The field must be either in the Forms data list, or have a parameter "list" containing an array (see Using lists)
-		VALID_CUSTOM:			The field value is checked against the provided callback, this takes the two parameters, The first being "callback" which will contain a valid php callback, 
+		VALID_CUSTOM:			The field value is checked against the provided callback, this takes the two parameters, The first being "callback" which will contain a valid php callback,
 							and the second "errorCode" the errorCode to raise if the callback returns false
 		VALID_LENGTH:			The field must be between the provided values, this takes two optional parameters, "min" and "max"
 		VALID_MUSTMATCHFIELD:	The field must be the same value as the field name contained within the parameter "field"
 		VALID_MUSTMATCHREGEX:	The field must match the regex provided in the parameter "regex"
-		
+
 --------------
-		
+
 ### Using Lists
 FormValidator can also validate html lists, and generate those. There are two methods to do this
 
@@ -157,8 +157,8 @@ For Example lets say we wanted to show and validate a list of usernames
 		class TestForm extends Form{
 			public $validation = Array( // Contains a hash array of form elements
 				"usernames" => VALID_IN_DATA_LIST
-			); 
-			
+			);
+
 			public function __construct(){
 				$usernames = Array(500 => "Matt", 300 => "Thor", 1 => "Asa", 5 => "Martina", 9 => "John", 12 => "Kate"); // Fetch our usernames from the database, with the keys being their userID
 				$this->addListData("usernames", $usernames); // Add the list data
@@ -171,8 +171,8 @@ Now whenever this form is used, it will have a list of usernames within it, to s
 	<?php
 		$form->select("usernames"); // loads and displays the data from the stored data
 	?>
-	
-	
+
+
 -----------
 
 ### Multiple Form Fields On One Page
