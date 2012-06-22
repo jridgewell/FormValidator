@@ -56,7 +56,7 @@ class Form {
 
         if (file_exists($file)) {
             require_once($file);
-            $class = __NAMESPACE__ . '\\' . $name . "Form";
+            $class = $name . "Form";
             return new $class;
         } else {
             throw new FileDoesntExistException();
