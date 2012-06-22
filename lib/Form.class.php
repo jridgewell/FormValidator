@@ -6,7 +6,7 @@
  * @link url
  */
 
-class Form{
+class Form {
 
     /**
      * Stores the path of the Forms directory

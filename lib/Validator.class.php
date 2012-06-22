@@ -39,7 +39,7 @@ define("VALIDATE_ERROR_NOT_IN_LIST", "inlist");
 define("VALIDATE_ERROR_NOT_URL", "url");
 
 
-class Validator{
+class Validator {
 
 
     /**
