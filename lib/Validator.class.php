@@ -103,19 +103,19 @@ class Validator{
      * @param Form $name
      * @return Mixed errorCode
      */
-    static public function isElementValid($rule, $value, $name, $form){
+    static public function isElementValid($rule, $value, $name, $form) {
         // Due to the format of the rules, some rules can have parameters, so we strip that into a seperate variable
-        if(is_array($rule)){
+        if (is_array($rule)) {
             $params = $rule;
             $rule = array_shift($rule);
-        }else{
+        } else {
             $params = Array();
         }
 
 
 
 
-        switch($rule){
+        switch($rule) {
         case VALID_DO_NOTHING: 		return true;
         case VALID_EMPTY:			return empty($value) ? VALID_EMPTY : true;
 
@@ -134,34 +134,34 @@ class Validator{
         case VALID_MUSTMATCHREGEX:	return preg_match($params['regex'], $value) ? true : VALID_ERROR_NOT_MATCH_REGEX;
 
         case VALID_CUSTOM :
-            if(isset($params['run_noerror']) && $params['run_noerror'] && $form->itemHasError($name)){
+            if (isset($params['run_noerror']) && $params['run_noerror'] && $form->itemHasError($name)) {
                 return true;
-            }else if(!call_user_func($params['callback'], $value, $params)){
+            } else if (!call_user_func($params['callback'], $value, $params)) {
                 return $params['errorCode'];
-            }else{
+            } else {
                 return true;
             }
             break;
 
 
         case VALID_IN_DATA_LIST:
-            if(($list = $form->getListData($name)) != false){
-                if(in_array($value, $list)){
+            if (($list = $form->getListData($name)) != false) {
+                if (in_array($value, $list)) {
                     return true;
                 }
 
-                if(isset($params["searchKeys"]) && $params["searchKeys"]){
-                    if(in_array($value, array_keys($list))){
+                if (isset($params["searchKeys"]) && $params["searchKeys"]) {
+                    if (in_array($value, array_keys($list))) {
                         return true;
                     }
                 }
-            }else if(isset($params['list'])){
-                if(in_array($value,  $params['list'])){
+            } else if (isset($params['list'])) {
+                if (in_array($value,  $params['list'])) {
                     return true;
                 }
 
-                if(isset($params["searchKeys"]) && $params["searchKeys"]){
-                    if(in_array($value, array_keys($params['list']))){
+                if (isset($params["searchKeys"]) && $params["searchKeys"]) {
+                    if (in_array($value, array_keys($params['list']))) {
                         return true;
                     }
                 }
@@ -177,7 +177,7 @@ class Validator{
      * @param Array $value
      * @return Boolean
      */
-    static public function isEmpty($value){
+    static public function isEmpty($value) {
         return empty($value);
     }
 
@@ -186,7 +186,7 @@ class Validator{
      * @param int $value
      * @return Boolean
      */
-    static public function isNumber($value){
+    static public function isNumber($value) {
         return (boolean) filter_var($value, FILTER_VALIDATE_INT);
     }
 
@@ -195,7 +195,7 @@ class Validator{
      * @param String $value
      * @return Boolean
      */
-    static public function isString($value){
+    static public function isString($value) {
         return true;
     }
 
@@ -204,7 +204,7 @@ class Validator{
      * @param String $value
      * @return Boolean
      */
-    static public function isEmail($value){
+    static public function isEmail($value) {
         return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
     }
 
@@ -213,7 +213,7 @@ class Validator{
      * @param String $value
      * @return Boolean
      */
-    static public function isValidTimeZone($value){
+    static public function isValidTimeZone($value) {
         return in_array($value, timezone_identifiers_list());
     }
 
@@ -222,7 +222,7 @@ class Validator{
      * @param String $url
      * @return Boolean
      */
-    static public function isValidUrl($value){
+    static public function isValidUrl($value) {
         return filter_var($value, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED);
     }
 
@@ -232,16 +232,16 @@ class Validator{
      * @param Map $params
      * @return Boolean
      */
-    static public function isValidLength($value, $params){
+    static public function isValidLength($value, $params) {
 
-        if(isset($params['min'])){
-            if(strlen($value) < $params['min']){
+        if (isset($params['min'])) {
+            if (strlen($value) < $params['min']) {
                 return VALID_ERROR_TOOSHORT;
             }
         }
 
-        if(isset($params['max'])){
-            if(strlen($value) > $params['max']){
+        if (isset($params['max'])) {
+            if (strlen($value) > $params['max']) {
                 return VALID_ERROR_TOOLONG;
             }
         }
