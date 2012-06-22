@@ -177,8 +177,8 @@ class Validator{
      * @param Array $value
      * @return Boolean
      */
-    static public function isEmpty($value) {
-        return empty($value);
+    static public function isNotEmpty($value) {
+        return !empty($value);
     }
 
     /**
@@ -187,7 +187,7 @@ class Validator{
      * @return Boolean
      */
     static public function isNumber($value) {
-        return (boolean) filter_var($value, FILTER_VALIDATE_INT);
+        return filter_var($value, FILTER_VALIDATE_INT) !== false;
     }
 
     /**
@@ -223,7 +223,7 @@ class Validator{
      * @return Boolean
      */
     static public function isValidUrl($value) {
-        return filter_var($value, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED);
+        return filter_var($value, FILTER_VALIDATE_URL) !== false;
     }
 
     /**
