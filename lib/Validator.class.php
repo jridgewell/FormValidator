@@ -6,35 +6,35 @@
  */
 
 /* does nothing. useful when you want a input included in the checking array, but not checked */
-define("VALID_DO_NOTHING", -1);
+define("VALIDATE_DO_NOTHING", -1);
 
 /* input is still valid if empty */
-define("VALID_EMPTY", -2);
+define("VALIDATE_EMPTY", -2);
 
 /* valid if input is not empty */
-define("VALID_NOT_EMPTY", 0);
+define("VALIDATE_NOT_EMPTY", 0);
 
 /* valid if input is a number */
-define("VALID_NUMBER", 2);
+define("VALIDATE_NUMBER", 2);
 
 /* valid if input is a string */
-define("VALID_STRING", 3);
+define("VALIDATE_STRING", 3);
 
 /* valid if input is an email */
-define("VALID_EMAIL", 7);
+define("VALIDATE_EMAIL", 7);
 
 /* valid if input is a valid timezone */
-define("VALID_TIMEZONE", 8);
+define("VALIDATE_TIMEZONE", 8);
 
 /* valid if input is a url */
-define("VALID_URL", 10);
+define("VALIDATE_URL", 10);
 
 /*
     if not specified in a param then Form::addListData is used to find the list, if you havent use that function your yourForm::getListData is called
     Params:
     Array list
  */
-define("VALID_IN_DATA_LIST", 9);
+define("VALIDATE_IN_DATA_LIST", 9);
 
 /*
     allows you to define a custom checking function, see above examples for an example of this
@@ -50,7 +50,7 @@ define("VALID_IN_DATA_LIST", 9);
     if you return false then an error will be raised with the errorCode you defined
 
  */
-define("VALID_CUSTOM", 1);
+define("VALIDATE_CUSTOM", 1);
 
 /*
     Input must be a certain length
@@ -59,37 +59,37 @@ define("VALID_CUSTOM", 1);
     int Min
     int Max
  */
-define("VALID_LENGTH", 4);
+define("VALIDATE_LENGTH", 4);
 
 
 
-define("VALID_MUSTMATCHFIELD", 5);
-define("VALID_MUSTMATCHREGEX", 6);
+define("VALIDATE_MUSTMATCHFIELD", 5);
+define("VALIDATE_MUSTMATCHREGEX", 6);
 
-define("VALID_UPLOAD", 7);
+define("VALIDATE_UPLOAD", 7);
 
 
 /*
     Standard error codes use these when calling the Form::error function
  */
 
-define("VALID_ERROR_EMAIL", "notemail");
-define("VALID_ERROR_EMPTY", "empty");
-define("VALID_ERROR_CUSTOM", "custom");
-define("VALID_ERROR_NOT_NUMBER", "number");
-define("VALID_ERROR_NOT_STRING", "string");
+define("VALIDATE_ERROR_EMAIL", "notemail");
+define("VALIDATE_ERROR_EMPTY", "empty");
+define("VALIDATE_ERROR_CUSTOM", "custom");
+define("VALIDATE_ERROR_NOT_NUMBER", "number");
+define("VALIDATE_ERROR_NOT_STRING", "string");
 
 
-define("VALID_ERROR_TOOSHORT", "stringshort");
-define("VALID_ERROR_TOOLONG", "stringlong");
+define("VALIDATE_ERROR_TOOSHORT", "stringshort");
+define("VALIDATE_ERROR_TOOLONG", "stringlong");
 
-define("VALID_ERROR_NOT_MATCH_FIELD", "nomatchfield");
-define("VALID_ERROR_NOT_MATCH_REGEX", "nomatchregexfield");
+define("VALIDATE_ERROR_NOT_MATCH_FIELD", "nomatchfield");
+define("VALIDATE_ERROR_NOT_MATCH_REGEX", "nomatchregexfield");
 
-define("VALID_ERROR_TIMEZONE", "timezone");
-define("VALID_ERROR_NOTINLIST", "notinlist");
+define("VALIDATE_ERROR_TIMEZONE", "timezone");
+define("VALIDATE_ERROR_NOTINLIST", "notinlist");
 
-define("VALID_ERROR_NOT_URL", "noturl");
+define("VALIDATE_ERROR_NOT_URL", "noturl");
 
 
 class Validator{
@@ -116,24 +116,24 @@ class Validator{
 
 
         switch($rule) {
-        case VALID_DO_NOTHING: 		return true;
-        case VALID_EMPTY:			return empty($value) ? VALID_EMPTY : true;
+        case VALIDATE_DO_NOTHING: 		return true;
+        case VALIDATE_EMPTY:			return empty($value) ? VALIDATE_EMPTY : true;
 
-        case VALID_NUMBER: 			return self::isNumber($value) ? true : VALID_ERROR_NOT_NUMBER;
-        case VALID_STRING: 			return self::isString($value) ? true : VALID_ERROR_NOT_STRING;
-        case VALID_EMAIL: 			return self::isEmail($value) ? true : VALID_ERROR_EMAIL;
+        case VALIDATE_NUMBER: 			return self::isNumber($value) ? true : VALIDATE_ERROR_NOT_NUMBER;
+        case VALIDATE_STRING: 			return self::isString($value) ? true : VALIDATE_ERROR_NOT_STRING;
+        case VALIDATE_EMAIL: 			return self::isEmail($value) ? true : VALIDATE_ERROR_EMAIL;
 
-        case VALID_TIMEZONE: 		return self::isValidTimeZone($value) ? true : VALID_ERROR_TIMEZONE;
+        case VALIDATE_TIMEZONE: 		return self::isValidTimeZone($value) ? true : VALIDATE_ERROR_TIMEZONE;
 
-        case VALID_URL:				return FormValidator::isValidUrl($value) ? true : VALID_ERROR_NOT_URL;
+        case VALIDATE_URL:				return FormValidator::isValidUrl($value) ? true : VALIDATE_ERROR_NOT_URL;
 
-        case VALID_LENGTH :			return FormValidator::isValidLength($value, $params);
+        case VALIDATE_LENGTH :			return FormValidator::isValidLength($value, $params);
 
 
-        case VALID_MUSTMATCHFIELD: 	return ($value == $form->data[$params['field']]) ? true : VALID_ERROR_NOT_MATCH_FIELD;
-        case VALID_MUSTMATCHREGEX:	return preg_match($params['regex'], $value) ? true : VALID_ERROR_NOT_MATCH_REGEX;
+        case VALIDATE_MUSTMATCHFIELD: 	return ($value == $form->data[$params['field']]) ? true : VALIDATE_ERROR_NOT_MATCH_FIELD;
+        case VALIDATE_MUSTMATCHREGEX:	return preg_match($params['regex'], $value) ? true : VALIDATE_ERROR_NOT_MATCH_REGEX;
 
-        case VALID_CUSTOM :
+        case VALIDATE_CUSTOM :
             if (isset($params['run_noerror']) && $params['run_noerror'] && $form->itemHasError($name)) {
                 return true;
             } else if (!call_user_func($params['callback'], $value, $params)) {
@@ -144,7 +144,7 @@ class Validator{
             break;
 
 
-        case VALID_IN_DATA_LIST:
+        case VALIDATE_IN_DATA_LIST:
             if (($list = $form->getListData($name)) != false) {
                 if (in_array($value, $list)) {
                     return true;
@@ -166,7 +166,7 @@ class Validator{
                     }
                 }
             }
-            return VALID_ERROR_NOTINLIST;
+            return VALIDATE_ERROR_NOTINLIST;
             break;
         }
     }
@@ -236,13 +236,13 @@ class Validator{
 
         if (isset($params['min'])) {
             if (strlen($value) < $params['min']) {
-                return VALID_ERROR_TOOSHORT;
+                return VALIDATE_ERROR_TOOSHORT;
             }
         }
 
         if (isset($params['max'])) {
             if (strlen($value) > $params['max']) {
-                return VALID_ERROR_TOOLONG;
+                return VALIDATE_ERROR_TOOLONG;
             }
         }
         return true;
