@@ -51,8 +51,8 @@ class Form {
      * @return Form
      */
     static public function loadForm($name) {
-        $name	= ucfirst($name);
-        $file		= self::$formDirectory . $name . ".form.php";
+        $name = ucfirst($name);
+        $file = self::$formDirectory . $name . ".form.php";
 
         if (file_exists($file)) {
             require_once($file);
@@ -125,7 +125,6 @@ class Form {
         if (method_exists($this, "verify")) {
             $this->verify($this->data);
         }
-
         // Return the data if there isn't any errors
         return !$this->hasErrors() ? $this->data : false;
     }
@@ -226,11 +225,11 @@ class Form {
      */
     public function input($name, $elementAttributes=Array()) {
         $defaultAttributes = Array(
-            "name"	=> $name,
-            "type"	=> "text",
-            "value"	=> ""
+            "name"  => $name,
+            "type"  => "text",
+            "value" => ""
         );
-        $attributes 	= array_merge($defaultAttributes, $elementAttributes);
+        $attributes = array_merge($defaultAttributes, $elementAttributes);
 
         // Add the error class if the element has an error
         if ($this->elementHasError($name)) {
@@ -291,7 +290,7 @@ class Form {
 
 
         $attributes = array_merge($defaultAttributes, $elementAttributes);
-        $selected 	= false;
+        $selected   = false;
         if (isset($this->data[$name])) {
             $selected = $this->data[$name];
         }
