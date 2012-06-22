@@ -6,7 +6,7 @@
  */
 
 define("VALIDATE_DO_NOTHING", -14);
-define("VALIDATE_EMPTY", -13);
+//define("VALIDATE_EMPTY", -13);
 define("VALIDATE_NOT_EMPTY", -12);
 define("VALIDATE_NUMBER", -11);
 define("VALIDATE_STRING", -10);
@@ -64,7 +64,7 @@ class Validator{
 
         switch($rule) {
             case VALIDATE_DO_NOTHING: 		return true;
-            case VALIDATE_EMPTY:			return empty($value) ? VALIDATE_EMPTY : true;
+            //case VALIDATE_EMPTY:			return empty($value) ? VALIDATE_EMPTY : true;
             case VALIDATE_NOT_EMPTY:		return self::isNotEmpty($value) ? true : VALIDATE_ERROR_EMPTY;
             case VALIDATE_NUMBER:			return self::isNumber($value) ? true : VALIDATE_ERROR_NOT_NUMBER;
             case VALIDATE_STRING:			return self::isString($value) ? true : VALIDATE_ERROR_NOT_STRING;
