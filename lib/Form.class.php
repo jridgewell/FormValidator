@@ -54,7 +54,7 @@ class Form {
         $name = ucfirst($name);
         $file = self::$formDirectory . $name . '.form.php';
 
-        if (file_exists($file)) {
+        if (file_exists($file) && is_readable($file)) {
             require_once($file);
             $class = $name . 'Form';
             return new $class;
