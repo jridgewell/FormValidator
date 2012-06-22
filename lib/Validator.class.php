@@ -6,35 +6,35 @@
  */
 
 /* does nothing. useful when you want a input included in the checking array, but not checked */
-define("VALIDATE_DO_NOTHING", -1);
+define("VALIDATE_DO_NOTHING", -14);
 
 /* input is still valid if empty */
-define("VALIDATE_EMPTY", -2);
+define("VALIDATE_EMPTY", -13);
 
 /* valid if input is not empty */
-define("VALIDATE_NOT_EMPTY", 0);
+define("VALIDATE_NOT_EMPTY", -12);
 
 /* valid if input is a number */
-define("VALIDATE_NUMBER", 2);
+define("VALIDATE_NUMBER", -11);
 
 /* valid if input is a string */
-define("VALIDATE_STRING", 3);
+define("VALIDATE_STRING", -10);
 
 /* valid if input is an email */
-define("VALIDATE_EMAIL", 7);
+define("VALIDATE_EMAIL", -9);
 
 /* valid if input is a valid timezone */
-define("VALIDATE_TIMEZONE", 8);
+define("VALIDATE_TIMEZONE", -8);
 
 /* valid if input is a url */
-define("VALIDATE_URL", 10);
+define("VALIDATE_URL", -7);
 
 /*
     if not specified in a param then Form::addListData is used to find the list, if you havent use that function your yourForm::getListData is called
     Params:
     Array list
  */
-define("VALIDATE_IN_DATA_LIST", 9);
+define("VALIDATE_IN_DATA_LIST", -6);
 
 /*
     allows you to define a custom checking function, see above examples for an example of this
@@ -50,7 +50,7 @@ define("VALIDATE_IN_DATA_LIST", 9);
     if you return false then an error will be raised with the errorCode you defined
 
  */
-define("VALIDATE_CUSTOM", 1);
+define("VALIDATE_CUSTOM", -5);
 
 /*
     Input must be a certain length
@@ -59,14 +59,14 @@ define("VALIDATE_CUSTOM", 1);
     int Min
     int Max
  */
-define("VALIDATE_LENGTH", 4);
+define("VALIDATE_LENGTH", -4);
 
 
 
-define("VALIDATE_MUSTMATCHFIELD", 5);
-define("VALIDATE_MUSTMATCHREGEX", 6);
+define("VALIDATE_MUSTMATCHFIELD", -3);
+define("VALIDATE_MUSTMATCHREGEX", -2);
 
-define("VALIDATE_UPLOAD", 7);
+define("VALIDATE_UPLOAD", -1);
 
 
 /*
