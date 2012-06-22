@@ -146,7 +146,7 @@ class Form {
      * @return Boolean
      */
     public function isMe() {
-        return $this->hasPosted() && isset($_POST[$this->className]);
+        return $this->hasPosted() && isset($_POST[get_class($this)]);
     }
 
     /**
@@ -265,15 +265,16 @@ class Form {
      * Creates an submit button that this class can identify
      * @param Mixed $elementAttributes
      */
-    public function submitButton($elementAttributes) {
-        if (is_string($elementAttributes)) {
-            $elementAttributes = Array(
-                "value" => $elementAttributes
-            );
+    public function submitButton($value, $elementAttributes=Array()) {
+        if (is_string($value)) {
+            $elementAttributes["value"] = $elementAttributes;
+        }
+        if (isset($elementAttributes['name'])) {
+            $elementAttributes['name'] = null;
         }
 
         $elementAttributes['type'] = "submit";
-        $this->input($this->className, $elementAttributes);
+        $this->input(get_class($this), $elementAttributes);
     }
 
     /**
