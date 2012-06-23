@@ -68,44 +68,41 @@ class Validator {
             case VALIDATE_EMAIL:			return self::isEmail($value) ? true : VALIDATE_ERROR_NOT_EMAIL;
             case VALIDATE_TIMEZONE:	        return self::isValidTimeZone($value) ? true : VALIDATE_ERROR_NOT_TIMEZONE;
             case VALIDATE_URL:				return self::isValidUrl($value) ? true : VALIDATE_ERROR_NOT_URL;
-            case VALIDATE_LENGTH :			return self::isValidLength($value, $params);
-            case VALIDATE_MUST_MATCH_FIELD:	return ($value == $form->data[$params['field']]) ? true : VALIDATE_ERROR_NOT_MATCH_FIELD;
-            case VALIDATE_MUST_MATCH_REGEX:	return preg_match($params['regex'], $value) ? true : VALIDATE_ERROR_NOT_MATCH_REGEX;
-
-            case VALIDATE_CUSTOM :
-                if (isset($params['run_noerror']) && $params['run_noerror'] && $form->itemHasError($name)) {
-                    return true;
-                } else if (!call_user_func($params['callback'], $value, $params)) {
-                    return $params['errorCode'];
-                } else {
-                    return true;
-                }
-                break;
-
-            case VALIDATE_IN_DATA_LIST:
-                if (($list = $form->getListData($name)) != false) {
-                    if (in_array($value, $list)) {
-                        return true;
-                    }
-
-                    if (isset($params['searchKeys']) && $params['searchKeys']) {
-                        if (in_array($value, array_keys($list))) {
-                            return true;
-                        }
-                    }
-                } else if (isset($params['list'])) {
-                    if (in_array($value,  $params['list'])) {
-                        return true;
-                    }
-
-                    if (isset($params['searchKeys']) && $params['searchKeys']) {
-                        if (in_array($value, array_keys($params['list']))) {
-                            return true;
-                        }
-                    }
-                }
-                return VALIDATE_ERROR_NOT_IN_LIST;
-                break;
+            //TODO: Implement these with new changes
+            // case VALIDATE_LENGTH :			return self::isValidLength($value, $params);
+            //             case VALIDATE_MUST_MATCH_FIELD:	return ($value == $form->data[$params['field']]) ? true : VALIDATE_ERROR_NOT_MATCH_FIELD;
+            //             case VALIDATE_MUST_MATCH_REGEX:	return preg_match($params['regex'], $value) ? true : VALIDATE_ERROR_NOT_MATCH_REGEX;
+            //             case VALIDATE_CUSTOM :
+            //                 if (isset($params['run_noerror']) && $params['run_noerror'] && $form->itemHasError($name)) {
+            //                     return true;
+            //                 } else if (!call_user_func($params['callback'], $value, $params)) {
+            //                     return $params['errorCode'];
+            //                 } else {
+            //                     return true;
+            //                 }
+            //                 break;
+            //             case VALIDATE_IN_DATA_LIST:
+            //                 if (($list = $form->getListData($name)) != false) {
+            //                     if (in_array($value, $list)) {
+            //                         return true;
+            //                     }
+            //                     if (isset($params['searchKeys']) && $params['searchKeys']) {
+            //                         if (in_array($value, array_keys($list))) {
+            //                             return true;
+            //                         }
+            //                     }
+            //                 } else if (isset($params['list'])) {
+            //                     if (in_array($value,  $params['list'])) {
+            //                         return true;
+            //                     }
+            //                     if (isset($params['searchKeys']) && $params['searchKeys']) {
+            //                         if (in_array($value, array_keys($params['list']))) {
+            //                             return true;
+            //                         }
+            //                     }
+            //                 }
+            //                 return VALIDATE_ERROR_NOT_IN_LIST;
+            //                 break;
         }
     }
 

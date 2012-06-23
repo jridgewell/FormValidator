@@ -69,7 +69,7 @@ class Form {
      * @param array $data
      */
     public function addListData($name, $data) {
-        $this->listData[$name] = $data;
+        $this->setDataForName($data, $name, $this->listData);
     }
 
     /**
@@ -78,7 +78,8 @@ class Form {
      * @return array
      */
     public function getListData($name) {
-        return isset($this->listData[$name]) ? $this->listData[$name] : false;
+        $data = $this->getDataForName($name, $this->listData);
+        return isset($data) ? $data : null;
     }
 
 
@@ -86,47 +87,63 @@ class Form {
      * validates the form against the current validation rules
      * @param String $name
      * @param Int $errorCode
-     * @return Boolean
+     * @return array
      */
     public function validate() {
-
-        // Loop over each validation rule and check it
-        foreach ($this->validation as $name => $rules) {
-            if (isset($_POST[$name]) && !isset($_FILES[$name])) {
-                $value 			= $_POST[$name];
-                $this->data[$name] 	= $value;
-
-                if (is_int($rules)) {
-                    $ret = Validator::isElementValid($rules, $value, $name, $this);
-
-                    //when empty we can skip the rest of the validation rules
-                    if ($ret == VALID_EMPTY) {
-                        continue;
-                    } elseif ($ret !== true) {
-                        $this->invalidateElement($name, $ret);
-                    }
-                } else if (is_array($rules)) {
-                    //loop over $this->isValid
-                    foreach ($rules as $rule) {
-                        $ret = Validator::isElementValid($rule, $value, $name, $this);
-
-                        //when empty we can skip the rest of the validation rules
-                        if ($ret === VALID_EMPTY) {
-                            break;
-                        } elseif ($ret !== true) {
-                            $this->invalidateElement($name, $ret);
-                        }
-                    }
-                }
-            }
-        }
-
+        array_walk(
+            $this->validation,
+            array($this, 'validateRule'),
+            array('', $_POST, &$this->data)
+        );
         // Call the subclass when the verify is finished, so they don't have to override the validation method
         if (method_exists($this, 'verify')) {
             $this->verify($this->data);
         }
         // Return the data if there isn't any errors
-        return !$this->hasErrors() ? $this->data : false;
+        return !$this->hasErrors() ? $this->data : null;
+    }
+
+
+    /**
+     * Validates posted data against a particular rule
+     * @param String $name
+     * @param int $rule
+     */
+    function validateRule($value, $key, $args) {
+        $name = $args[0];
+        $from = $args[1];
+        $to = &$args[2];
+        if (!is_array($value)) {
+            $to = $from;
+            $ret = Validator::isElementValid($value, $from, null, $this);
+            if ($ret !== true) {
+                $this->invalidateElement($name, $ret);
+            }
+        //TODO: Validate the Validators that take arguments
+        //} elseif ($value[0] === VALIDATE_LENGTH) {
+        } else {
+            if ($key === '[]') {
+                foreach($from as $k => $p) {
+                    $name .= '[' . $k . ']';
+                    $to[$k] = array();
+                    $args = array (
+                        $name,
+                        $p,
+                        &$to[$k],
+                    );
+                    array_walk($value, array($this, 'validateRule'), $args);
+                }
+            } else {
+                $name .= '[' . $key . ']';
+                $to[$key] = array();
+                $args = array (
+                    $name,
+                    $from[$key],
+                    &$to[$key],
+                );
+                array_walk($value, array($this, 'validateRule'), $args);
+            }
+        }
     }
 
 
@@ -163,13 +180,16 @@ class Form {
      * @return Boolean
      */
     public function elementHasError($name, $errorCode=false) {
-        if (isset($this->errors[$name])) {
+        $error = $this->getDataForName($name, $this->errors);
+        if (isset($error)) {
             if (!$errorCode) {
                 return true;
-            } else if (is_array($this->errors[$name])) {
-                return in_array($errorCode, $this->errors[$name]);
-            } else if (is_string($this->errors[$name])) {
-                return $this->errors[$name] == $errorCode;
+            } else {
+                if (is_array($this->errors[$name])) {
+                    return in_array($errorCode, $this->errors[$name]);
+                } else if (is_string($this->errors[$name])) {
+                    return $this->errors[$name] === $errorCode;
+                }
             }
         }
         return false;
@@ -181,13 +201,14 @@ class Form {
      * @param Int $errorCode
      */
     public function invalidateElement($name, $errorCode) {
-        if (isset($this->errors[$name])) {
-            if (!is_array($this->errors[$name])) {
-                $this->errors[$name] = array($this->errors[$name]);
+        $element = &$this->getDataForName($name, $this->errors);
+        if (isset($element)) {
+            if (!is_array($element)) {
+                $element = array($element);
             }
-            $this->errors[$name][] = $errorCode;
+            $element[] = $errorCode;
         } else {
-            $this->errors[$name] = $errorCode;
+            $this->setDataForName($errorCode, $name, $this->errors);
         }
     }
 
@@ -197,21 +218,18 @@ class Form {
      * @param mixed $message
      */
     public function error($name, $message) {
+        $error = getDataForName($name, $this->errors);
         if (isset($this->errors[$name])) {
             if (is_array($message)) {
                 $er = array();
                 foreach ($message as $errorCode => $m) {
-                    if ($this->ElementHasError($name, $errorCode)) {
-                        if ($errorCode == VALID_ERROR_TOOLONG) {
-                            $er[] = '<div>' . sprintf($m, strlen($this->data[$name])) . '</div>';
-                        } else {
-                            $er[] = '<div>' . $m . '</div>';
-                        }
+                    if ($this->elementHasError($name, $errorCode)) {
+                        $er[] = '<div>' . $m . '</div>';
                     }
                 }
                 echo implode("\n", $er);
-            } else if (is_string($message)) {
-                if ($this->ElementHasError($name)) {
+            } else {
+                if ($this->elementHasError($name, $message)) {
                     echo '<div>' . $message . '</div>';
                 }
             }
@@ -241,15 +259,15 @@ class Form {
         }
 
         // Preserve the saved values if the form fails validation
-        if (isset($this->data[$name]) && $attributes['type'] != "password" && empty($attributes['value'])) {
-            $attributes['value'] = $this->data[$name];
+        $data = $this->getDataForName($name, $this->data);
+        if (isset($data) && $attributes['type'] != 'password') {
+            $attributes['value'] = $data;
         }
 
         // Convert the name/value key pairs into strings
         $a = array();
         foreach ($attributes as $name => $value) {
-            if (is_array($value)) {continue;}
-                $a[] = sprintf('%s="%s"', $name, htmlentities($value, ENT_QUOTES));
+            $a[] = sprintf('%s="%s"', $name, htmlentities($value, ENT_QUOTES));
         }
 
         // Handle textarea needing a different value format
@@ -260,18 +278,48 @@ class Form {
         }
     }
 
+    public function &getDataForName($name, &$base) {
+        $pieces = explode('[', $name);
+        if ($pieces[0] === '') {
+            array_shift($pieces);
+        }
+        foreach ($pieces as $piece) {
+            $piece = preg_replace('/\]$/', '', $piece);
+            if (isset($piece, $base)) {
+                $base = &$base[$piece];
+            } else {
+                $base = NULL;
+                break;
+            }
+        }
+        return $base;
+    }
+
+     public function setDataForName($data, $name, &$base) {
+        $pieces = explode('[', $name);
+        if ($pieces[0] === '') {
+            array_shift($pieces);
+        }
+        foreach ($pieces as $piece) {
+            $piece = preg_replace('/\]$/', '', $piece);
+            if (isset($piece, $base)) {
+                $base = &$base[$piece];
+            } else {
+                $base[$piece] = array();
+                $base = &$base[$piece];
+            }
+        }
+        $base = $data;
+    }
+
     /**
      * Creates an submit button that this class can identify
      * @param Mixed $elementAttributes
      */
     public function submitButton($value, $elementAttributes=array()) {
-        if (is_string($value)) {
-            $elementAttributes['value'] = $elementAttributes;
+        if (isset($value)) {
+            $elementAttributes['value'] = $value;
         }
-        if (isset($elementAttributes['name'])) {
-            $elementAttributes['name'] = null;
-        }
-
         $elementAttributes['type'] = 'submit';
         $this->input(get_class($this), $elementAttributes);
     }
@@ -287,12 +335,12 @@ class Form {
             'name' => $name,
             'type' => 'normal',
         );
-
-
         $attributes = array_merge($defaultAttributes, $elementAttributes);
+
         $selected   = false;
-        if (isset($this->data[$name])) {
-            $selected = $this->data[$name];
+        $data = $this->getDataForName($name, $this->data);
+        if (isset($data)) {
+            $selected = $data;
         }
 
         // If the passed values are empty, try to get it from the list data the class holds
@@ -304,7 +352,9 @@ class Form {
 
         // Handle custom select types
         switch($attributes['type']) {
-        case 'timezone' : $values = timezone_identifiers_list(); break;
+            case 'timezone' :
+                $values = timezone_identifiers_list();
+                break;
         }
         unset($attributes['type']);
 
@@ -339,5 +389,3 @@ class Form {
 }
 
 class FileDoesntExistException extends \Exception{}
-
-?>
