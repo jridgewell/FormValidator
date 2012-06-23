@@ -16,9 +16,16 @@ class Form {
 
     /**
      * Stores the name of the css error to be included on elements that don't pass validation
+     * Will also be included in the $this->error() output
      * @var String
      */
-    static public $cssErrorClass = 'Error';
+    static public $cssErrorClass = 'error';
+
+    /**
+     * Stores the tagname that wil wrap error messages
+     * @var String
+     */
+    static public $errorWrapperTag = 'p';
 
     /**
      * Stores any errors the form has after validation
@@ -224,13 +231,15 @@ class Form {
                 $er = array();
                 foreach ($message as $errorCode => $m) {
                     if ($this->elementHasError($name, $errorCode)) {
-                        $er[] = '<div>' . $m . '</div>';
+                        $er[] = '<' . self::$errorWrapperTag . ' class="' . self::$cssErrorClass . '">'
+                            . $m . '</' . self::$errorWrapperTag . '>';
                     }
                 }
                 echo implode("\n", $er);
             } else {
                 if ($this->elementHasError($name, $message)) {
-                    echo '<div>' . $message . '</div>';
+                    echo '<' . self::$errorWrapperTag . ' class="' . self::$cssErrorClass . '">'
+                        . $message . '</' . self::$errorWrapperTag . '>';
                 }
             }
         }
