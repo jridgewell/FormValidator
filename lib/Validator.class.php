@@ -56,11 +56,8 @@ class Validator {
             $params = $rule;
             $rule = array_shift($rule);
         } else {
-            $params = Array();
+            $params = array();
         }
-
-
-
 
         switch($rule) {
             case VALIDATE_DO_NOTHING: 		return true;
@@ -115,7 +112,7 @@ class Validator {
 
     /**
      * Checks if the value is empty
-     * @param Array $value
+     * @param array $value
      * @return Boolean
      */
     static public function isNotEmpty($value) {

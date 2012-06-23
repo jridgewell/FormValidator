@@ -24,26 +24,26 @@ class Form {
      * Stores any errors the form has after validation
      * @var Map
      */
-    public $errors = Array();
+    public $errors = array();
 
     /**
      * Stores the validation array, this is overridden by the child class
      * @var Map
      */
-    public $validation = Array();
+    public $validation = array();
 
     /**
      * Stores the Form data
      * @var Map
      */
-    private $data = Array();
+    private $data = array();
 
 
     /**
      * Stores the list data for any elements that use lists, eg Select
      * @var Map
      */
-    private $listData = Array();
+    private $listData = array();
 
     /**
      * Loads the specified form file and initializes it
@@ -66,7 +66,7 @@ class Form {
     /**
      * Adds list data to the form for validation
      * @param String $name
-     * @param Array $data
+     * @param array $data
      */
     public function addListData($name, $data) {
         $this->listData[$name] = $data;
@@ -75,7 +75,7 @@ class Form {
     /**
      * retrieves stored list data
      * @param String $name
-     * @return Array
+     * @return array
      */
     public function getListData($name) {
         return isset($this->listData[$name]) ? $this->listData[$name] : false;
@@ -183,7 +183,7 @@ class Form {
     public function invalidateElement($name, $errorCode) {
         if (isset($this->errors[$name])) {
             if (!is_array($this->errors[$name])) {
-                $this->errors[$name] = Array($this->errors[$name]);
+                $this->errors[$name] = array($this->errors[$name]);
             }
             $this->errors[$name][] = $errorCode;
         } else {
@@ -199,7 +199,7 @@ class Form {
     public function error($name, $message) {
         if (isset($this->errors[$name])) {
             if (is_array($message)) {
-                $er = Array();
+                $er = array();
                 foreach ($message as $errorCode => $m) {
                     if ($this->ElementHasError($name, $errorCode)) {
                         if ($errorCode == VALID_ERROR_TOOLONG) {
@@ -221,10 +221,10 @@ class Form {
     /**
      * Creates an input element with the attributes provided
      * @param String $name
-     * @param Array $elementAttributes
+     * @param array $elementAttributes
      */
-    public function input($name, $elementAttributes=Array()) {
-        $defaultAttributes = Array(
+    public function input($name, $elementAttributes=array()) {
+        $defaultAttributes = array(
             'name'  => $name,
             'type'  => 'text',
             'value' => ''
@@ -246,7 +246,7 @@ class Form {
         }
 
         // Convert the name/value key pairs into strings
-        $a = Array();
+        $a = array();
         foreach ($attributes as $name => $value) {
             if (is_array($value)) {continue;}
                 $a[] = sprintf('%s="%s"', $name, htmlentities($value, ENT_QUOTES));
@@ -264,7 +264,7 @@ class Form {
      * Creates an submit button that this class can identify
      * @param Mixed $elementAttributes
      */
-    public function submitButton($value, $elementAttributes=Array()) {
+    public function submitButton($value, $elementAttributes=array()) {
         if (is_string($value)) {
             $elementAttributes['value'] = $elementAttributes;
         }
@@ -278,12 +278,12 @@ class Form {
 
     /**
      * Creates a select element
-     * @param Array $elementAttributes
-     * @param Array $values
+     * @param array $elementAttributes
+     * @param array $values
      * @param Boolean $useKeys
      */
-    public function select($name, $elementAttributes=Array(), $values=Array(), $useKeys=false) {
-        $defaultAttributes = Array(
+    public function select($name, $elementAttributes=array(), $values=array(), $useKeys=false) {
+        $defaultAttributes = array(
             'name' => $name,
             'type' => 'normal',
         );
@@ -309,7 +309,7 @@ class Form {
         unset($attributes['type']);
 
         // Convert the name/value key pairs into strings
-        $a = Array();
+        $a = array();
         foreach ($attributes as $name => $value) {
             $a[] = sprintf('%s="%s"', $name, $value);
         }
