@@ -185,10 +185,10 @@ class Form {
             if (!$errorCode) {
                 return true;
             } else {
-                if (is_array($this->errors[$name])) {
-                    return in_array($errorCode, $this->errors[$name]);
-                } else if (is_string($this->errors[$name])) {
-                    return $this->errors[$name] === $errorCode;
+                if (is_array($error)) {
+                    return in_array($errorCode, $error);
+                } else {
+                    return $error == $errorCode;
                 }
             }
         }
@@ -218,8 +218,8 @@ class Form {
      * @param mixed $message
      */
     public function error($name, $message) {
-        $error = getDataForName($name, $this->errors);
-        if (isset($this->errors[$name])) {
+        $error = $this->getDataForName($name, $this->errors);
+        if (isset($error)) {
             if (is_array($message)) {
                 $er = array();
                 foreach ($message as $errorCode => $m) {
