@@ -2,14 +2,12 @@
 FormValidator allows you to create and validate forms using a simple rule based approch.
 
 ## Basics
-
 ### Setting up your first form
 
 A form file is just a class that extends the Form class
 In this example, the form validator checks if `name` isn't empty
 
-#### test.form.php
-
+#### test.form.php (the model)
 ```php
 <?php
     class TestForm extends Form {
@@ -20,11 +18,7 @@ In this example, the form validator checks if `name` isn't empty
 ?>
 ```
 
-
-Then to use this form:
-
-#### index.php
-
+#### index.php (the controller)
 ```php
 <?php
     $form = new TestForm();
@@ -43,10 +37,7 @@ Then to use this form:
 ?>
 ```
 
-Now in our view:
-
-#### form.html.php
-
+#### form.html.php (the view)
 ```php
     <form name="input" method="POST">
     <?php $form->error("name", "There was an error"); ?>
@@ -59,10 +50,8 @@ Now in our view:
 **Note:** If the form fails validation, by using the `$form->input` method, we preserve whatever value was in that field (except for password fields)
 
 
-## The Validation Array (AKA. The Model)
-
-The `$validation` array contains all the form fields and rules that need to pass, for the form to be valid.
-In the example above, it showed a single rule applying to one form element, but you can apply multiple rules to an element by using an array.
+## The Validation Array
+The `$validation` array contains all the form fields and rules that need to pass, for the form to be valid. In the example above, it showed a single rule applying to one form element, but you can apply multiple rules to an element by using an array.
 
 ```php
 <?php
@@ -151,12 +140,12 @@ The `$validation` array also supports passing in parameters into the validation 
     </tr>
 </table>
 
-Constants with parameters:
+Constants with parameters: (Examples below)
 
 <table>
     <tr>
         <td>VALIDATE_IN_DATA_LIST:</td>
-        <td>See Using Lists below</td>
+        <td>See below</td>
     </tr>
     <tr>
         <td>VALIDATE_CUSTOM:</td>
@@ -178,7 +167,7 @@ Constants with parameters:
 
 ## Advanced
 
-### Using Lists
+### VALIDATE_IN_DATA_LIST
 FormValidator can also generate and validate select lists. There are two methods to do this:
 
 1. By suppling an array as VALIDATE_IN_DATA_LIST's parameter
@@ -187,9 +176,39 @@ FormValidator can also generate and validate select lists. There are two methods
 
 **Note:** The array can either be a hash of key/values or just values. If you pass in a hash, then the key will be returned.
 
-For Example lets say we wanted to show and validate a list of usernames
+For example lets say we wanted to show and validate a list of usernames
 
-test.form.php
+```php
+<?php
+    class TestForm extends Form{
+        public $validation = array( // Contains a hash array of form elements
+            "usernames" => array(
+                VALIDATE_IN_DATA_LIST,
+                'useKeys' => true,
+                'list' => array(
+                    500 => 'Matt',
+                    300 => 'Thor',
+                    1   => 'Asa'
+                )
+            )
+        );
+    }
+
+    //....
+    // Display errors for usernames
+    $form->error('usernames' array(
+        VALIDATE_IN_DATA_LIST => 'Not in list'
+    ));
+    // Display a select containing the usernames
+    $form->select("usernames", null, array(
+        500 => 'Matt',
+        300 => 'Thor',
+        1   => 'Asa'
+    ), true);
+?>
+```
+
+or
 
 ```php
 <?php
@@ -203,15 +222,91 @@ test.form.php
             $this->addListData("usernames", $usernames); // Add the list data
         }
     }
+
+    //....
+    // Display errors for usernames
+    $form->error('usernames' array(
+        VALIDATE_IN_DATA_LIST => 'Not in list'
+    ));
+    // Display a select containing the usernames
+    // Select will be populated from $form->listData
+    $form->select("usernames");
 ?>
 ```
 
-
-Now whenever this form is used, it will have a list of usernames within it, to show this within a html page you can use Form::Select($fieldname [, $elementAttributes [, $values [, $useKeys])
-
+### VALIDATE_CUSTOM
 ```php
 <?php
-    $form->select("usernames"); // loads and displays the data from the stored data
+    class TestForm extends Form {
+        public $validation = array(
+            "checkCustom" => array(
+                array(
+                    VALIDATE_CUSTOM,
+                    "callback" => 'myCallback',
+                    "param1"   => 'These will be passed',
+                    "param2"   => 'to myCallback as $params'
+                )
+            )
+        )
+
+        public function myCallback($fieldValue, $params) {
+            // This method must be public!
+            // Check the submitted value ($fieldValue)
+            // with the $params you specified in $validation
+        }
+    }
+?>
+```
+
+### VALIDATE_LENGTH
+```php
+<?php
+    class TestForm extends Form {
+        public $validation = array(
+            "length" => array(
+                VALIDATE_NOT_EMPTY,
+                array(
+                    VALIDATE_LENGTH,
+                    "min" => 0,
+                    "max" => 100
+                )
+            )
+        )
+    }
+?>
+```
+
+### VALIDATE_MUST_MATCH_FIELD
+```php
+<?php
+    class TestForm extends Form {
+        public $validation = array(
+            "password"      => VALIDATE_NOT_EMPTY,
+            "repassword"    => array(
+                VALIDATE_NOT_EMPTY,
+                array(
+                    VALIDATE_MUST_MATCH_FIELD,
+                    "field" => 'password'
+                )
+            )
+        )
+    }
+?>
+```
+
+### VALIDATE_MUST_MATCH_REGEX
+```php
+<?php
+    class TestForm extends Form {
+        public $validation = array(
+            "regCheck" => array(
+                array(
+                    VALIDATE_MUST_MATCH_REGEX,
+                    "regex" => '/[a-zA-Z0-9]+/'
+                )
+            )
+        )
+    }
 ?>
 ```
 
