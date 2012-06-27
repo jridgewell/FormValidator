@@ -2,7 +2,6 @@
 /**
  * @author Matt Labrum <matt@labrum.me>
  * @license Beerware
- * @link url
  */
 
 define('VALIDATE_DO_NOTHING', -13);
@@ -22,7 +21,6 @@ define('VALIDATE_UPLOAD', -1);
 
 class Validator {
 
-
     /**
      * validates the element against the passed validation rules
      * @param Mixed $rule
@@ -39,7 +37,6 @@ class Validator {
         } else {
             $params = array();
         }
-
         switch($rule) {
             case VALIDATE_DO_NOTHING:       return true;
             case VALIDATE_NOT_EMPTY:        return self::isNotEmpty($value)                     ? true : VALIDATE_NOT_EMPTY;
@@ -48,7 +45,7 @@ class Validator {
             case VALIDATE_EMAIL:            return self::isEmail($value)                        ? true : VALIDATE_EMAIL;
             case VALIDATE_TIMEZONE:         return self::isValidTimeZone($value)                ? true : VALIDATE_TIMEZONE;
             case VALIDATE_URL:              return self::isValidUrl($value)                     ? true : VALIDATE_URL;
-            case VALIDATE_MUST_MATCH_FIELD: return self::valueIsSameAs($value, $form, $params)  ? true : VALIDATE_MUST_MATCH_FIELD;
+            case VALIDATE_MUST_MATCH_FIELD: return self::isValueSameAs($value, $form, $params)  ? true : VALIDATE_MUST_MATCH_FIELD;
             case VALIDATE_LENGTH:           return self::isValidLength($value, $params)         ? true : VALIDATE_LENGTH;
             case VALIDATE_MUST_MATCH_REGEX: return preg_match($params['regex'], $value)         ? true : VALIDATE_MUST_MATCH_REGEX;
             case VALIDATE_CUSTOM:
@@ -81,6 +78,15 @@ class Validator {
 
 
     /**
+     * Checks if the value is a valid email
+     * @param String $value
+     * @return Boolean
+     */
+    static private function isEmail($value) {
+        return (filter_var($value, FILTER_VALIDATE_EMAIL) !== false);
+    }
+
+    /**
      * Checks if the value is empty
      * @param array $value
      * @return Boolean
@@ -108,12 +114,23 @@ class Validator {
     }
 
     /**
-     * Checks if the value is a valid email
+     * Checks if the value is a specified length
      * @param String $value
+     * @param Map $params
      * @return Boolean
      */
-    static private function isEmail($value) {
-        return (filter_var($value, FILTER_VALIDATE_EMAIL) !== false);
+    static private function isValidLength($value, $params) {
+        if (isset($params['min'])) {
+            if (strlen($value) < $params['min']) {
+                return VALIDATE_LENGTH;
+            }
+        }
+        if (isset($params['max'])) {
+            if (strlen($value) > $params['max']) {
+                return VALIDATE_LENGTH;
+            }
+        }
+        return true;
     }
 
     /**
@@ -134,38 +151,13 @@ class Validator {
         return (filter_var($value, FILTER_VALIDATE_URL) !== false);
     }
 
-
     /**
      * Checks if the value is the same as another field.
      * @param String    $value
      * @param Object    $form
      * @param Array     $params
      */
-    static private function valueIsSameAs($value, $form, $params) {
+    static private function isValueSameAs($value, $form, $params) {
         return ($value === $form->getDataForName($params['field'], $form->data));
     }
-
-    /**
-     * Checks if the value is a specified length
-     * @param String $value
-     * @param Map $params
-     * @return Boolean
-     */
-    static private function isValidLength($value, $params) {
-
-        if (isset($params['min'])) {
-            if (strlen($value) < $params['min']) {
-                return VALIDATE_LENGTH;
-            }
-        }
-
-        if (isset($params['max'])) {
-            if (strlen($value) > $params['max']) {
-                return VALIDATE_LENGTH;
-            }
-        }
-        return true;
-    }
-
-
 }
