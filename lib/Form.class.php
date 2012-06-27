@@ -99,7 +99,7 @@ class Form {
     public function validate() {
         array_walk(
             $this->validation,
-            array($this, 'validateRule'),
+            array($this, 'validationWalk'),
             array('', $_POST, &$this->data)
         );
         // Call the subclass when the verify is finished, so they don't have to override the validation method
@@ -116,18 +116,26 @@ class Form {
      * @param String $name
      * @param int $rule
      */
-    function validateRule($value, $key, $args) {
+    function validationWalk($value, $key, $args) {
         $name = $args[0];
         $from = $args[1];
         $to = &$args[2];
-        if (!is_array($value)) {
+        if (!is_array($value)
+            || in_array($value[0],
+                array(
+                    VALIDATE_IN_DATA_LIST,
+                    VALIDATE_CUSTOM,
+                    VALIDATE_LENGTH,
+                    VALIDATE_MUST_MATCH_FIELD,
+                    VALIDATE_MUST_MATCH_REGEX
+                )
+            )
+        ) {
             $to = $from;
-            $ret = Validator::isElementValid($value, $from, null, $this);
+            $ret = Validator::isElementValid($value, $from, $name, $this);
             if ($ret !== true) {
                 $this->invalidateElement($name, $ret);
             }
-        //TODO: Validate the Validators that take arguments
-        //} elseif ($value[0] === VALIDATE_LENGTH) {
         } else {
             if ($key === '[]') {
                 foreach($from as $k => $p) {
@@ -138,7 +146,7 @@ class Form {
                         $p,
                         &$to[$k],
                     );
-                    array_walk($value, array($this, 'validateRule'), $args);
+                    array_walk($value, array($this, 'validationWalk'), $args);
                 }
             } else {
                 $name .= '[' . $key . ']';
@@ -148,7 +156,7 @@ class Form {
                     $from[$key],
                     &$to[$key],
                 );
-                array_walk($value, array($this, 'validateRule'), $args);
+                array_walk($value, array($this, 'validationWalk'), $args);
             }
         }
     }

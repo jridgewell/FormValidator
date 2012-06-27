@@ -5,8 +5,7 @@
  * @link url
  */
 
-define('VALIDATE_DO_NOTHING', -14);
-//define('VALIDATE_EMPTY', -13);
+define('VALIDATE_DO_NOTHING', -13);
 define('VALIDATE_NOT_EMPTY', -12);
 define('VALIDATE_NUMBER', -11);
 define('VALIDATE_STRING', -10);
@@ -43,48 +42,40 @@ class Validator {
 
         switch($rule) {
             case VALIDATE_DO_NOTHING:       return true;
-            //case VALIDATE_EMPTY:          return empty($value) ? VALIDATE_EMPTY : true;
-            case VALIDATE_NOT_EMPTY:        return self::isNotEmpty($value) ? true : VALIDATE_NOT_EMPTY;
-            case VALIDATE_NUMBER:           return self::isNumber($value) ? true : VALIDATE_NUMBER;
-            case VALIDATE_STRING:           return self::isString($value) ? true : VALIDATE_STRING;
-            case VALIDATE_EMAIL:            return self::isEmail($value) ? true : VALIDATE_EMAIL;
-            case VALIDATE_TIMEZONE:         return self::isValidTimeZone($value) ? true : VALIDATE_TIMEZONE;
-            case VALIDATE_URL:              return self::isValidUrl($value) ? true : VALIDATE_URL;
-            //TODO: Implement these with new changes
-            // case VALIDATE_LENGTH :            return self::isValidLength($value, $params);
-            //             case VALIDATE_MUST_MATCH_FIELD:    return ($value == $form->data[$params['field']]) ? true : VALIDATE_MUST_MATCH_FIELD;
-            //             case VALIDATE_MUST_MATCH_REGEX:    return preg_match($params['regex'], $value) ? true : VALIDATE_MUST_MATCH_REGEX;
-            //             case VALIDATE_CUSTOM :
-            //                 if (isset($params['run_noerror']) && $params['run_noerror'] && $form->itemHasError($name)) {
-            //                     return true;
-            //                 } else if (!call_user_func($params['callback'], $value, $params)) {
-            //                     return $params['errorCode'];
-            //                 } else {
-            //                     return true;
-            //                 }
-            //                 break;
-            //             case VALIDATE_IN_DATA_LIST:
-            //                 if (($list = $form->getListData($name)) != false) {
-            //                     if (in_array($value, $list)) {
-            //                         return true;
-            //                     }
-            //                     if (isset($params['searchKeys']) && $params['searchKeys']) {
-            //                         if (in_array($value, array_keys($list))) {
-            //                             return true;
-            //                         }
-            //                     }
-            //                 } else if (isset($params['list'])) {
-            //                     if (in_array($value,  $params['list'])) {
-            //                         return true;
-            //                     }
-            //                     if (isset($params['searchKeys']) && $params['searchKeys']) {
-            //                         if (in_array($value, array_keys($params['list']))) {
-            //                             return true;
-            //                         }
-            //                     }
-            //                 }
-            //                 return VALIDATE_IN_DATA_LIST;
-            //                 break;
+            case VALIDATE_NOT_EMPTY:        return self::isNotEmpty($value)                     ? true : VALIDATE_NOT_EMPTY;
+            case VALIDATE_NUMBER:           return self::isNumber($value)                       ? true : VALIDATE_NUMBER;
+            case VALIDATE_STRING:           return self::isString($value)                       ? true : VALIDATE_STRING;
+            case VALIDATE_EMAIL:            return self::isEmail($value)                        ? true : VALIDATE_EMAIL;
+            case VALIDATE_TIMEZONE:         return self::isValidTimeZone($value)                ? true : VALIDATE_TIMEZONE;
+            case VALIDATE_URL:              return self::isValidUrl($value)                     ? true : VALIDATE_URL;
+            case VALIDATE_MUST_MATCH_FIELD: return self::valueIsSameAs($value, $form, $params)  ? true : VALIDATE_MUST_MATCH_FIELD;
+            case VALIDATE_LENGTH:           return self::isValidLength($value, $params)         ? true : VALIDATE_LENGTH;
+            case VALIDATE_MUST_MATCH_REGEX: return preg_match($params['regex'], $value)         ? true : VALIDATE_MUST_MATCH_REGEX;
+            case VALIDATE_CUSTOM:
+                 if (!call_user_func(array($form, $params['callback']), $value, $params)) {
+                    return $params['errorCode'];
+                 } else {
+                    return true;
+                 }
+                 break;
+            case VALIDATE_IN_DATA_LIST:
+                $list = null;
+                if (isset($params['list'])) {
+                    $list = $params['list'];
+                } else {
+                    $list = $form->getListData($name);
+                }
+                if (isset($list) && is_array($list)) {
+                    if (isset($params['useKeys']) && $params['useKeys']) {
+                        if (in_array($value, array_keys($list))) {
+                            return true;
+                        }
+                    } else if (in_array($value,  $list)) {
+                        return true;
+                    }
+                }
+                return VALIDATE_IN_DATA_LIST;
+                break;
         }
     }
 
@@ -141,6 +132,17 @@ class Validator {
      */
     static public function isValidUrl($value) {
         return filter_var($value, FILTER_VALIDATE_URL) !== false;
+    }
+
+
+    /**
+     * Checks if the value is the same as another field.
+     * @param String    $value
+     * @param Object    $form
+     * @param Array     $params
+     */
+    static public function valueIsSameAs($value, $form, $params) {
+        return ($value === $form->getDataForName($params['field'], $form->data));
     }
 
     /**
