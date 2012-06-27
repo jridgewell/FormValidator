@@ -237,10 +237,8 @@ class Form {
                 }
                 echo implode("\n", $er);
             } else {
-                if ($this->elementHasError($name, $message)) {
-                    echo '<' . self::$errorWrapperTag . ' class="' . self::$cssErrorClass . '">'
-                        . $message . '</' . self::$errorWrapperTag . '>';
-                }
+                echo '<' . self::$errorWrapperTag . ' class="' . self::$cssErrorClass . '">'
+                    . $message . '</' . self::$errorWrapperTag . '>';
             }
         }
     }
