@@ -21,24 +21,6 @@ define('VALIDATE_MUST_MATCH_REGEX', -2);
 define('VALIDATE_UPLOAD', -1);
 
 
-/*
-    Standard error codes use these when calling the Form::error function
- */
-
-define('VALIDATE_ERROR_NOT_EMAIL', 'email');
-define('VALIDATE_ERROR_EMPTY', 'empty');
-define('VALIDATE_ERROR_NOT_CUSTOM', 'custom');
-define('VALIDATE_ERROR_NOT_NUMBER', 'number');
-define('VALIDATE_ERROR_NOT_STRING', 'string');
-define('VALIDATE_ERROR_TOO_SHORT', 'stringshort');
-define('VALIDATE_ERROR_TOO_LONG', 'stringlong');
-define('VALIDATE_ERROR_NOT_MATCH_FIELD', 'matchfield');
-define('VALIDATE_ERROR_NOT_MATCH_REGEX', 'matchregexfield');
-define('VALIDATE_ERROR_NOT_TIMEZONE', 'timezone');
-define('VALIDATE_ERROR_NOT_IN_LIST', 'inlist');
-define('VALIDATE_ERROR_NOT_URL', 'url');
-
-
 class Validator {
 
 
@@ -60,18 +42,18 @@ class Validator {
         }
 
         switch($rule) {
-            case VALIDATE_DO_NOTHING: 		return true;
-            //case VALIDATE_EMPTY:			return empty($value) ? VALIDATE_EMPTY : true;
-            case VALIDATE_NOT_EMPTY:		return self::isNotEmpty($value) ? true : VALIDATE_ERROR_EMPTY;
-            case VALIDATE_NUMBER:			return self::isNumber($value) ? true : VALIDATE_ERROR_NOT_NUMBER;
-            case VALIDATE_STRING:			return self::isString($value) ? true : VALIDATE_ERROR_NOT_STRING;
-            case VALIDATE_EMAIL:			return self::isEmail($value) ? true : VALIDATE_ERROR_NOT_EMAIL;
-            case VALIDATE_TIMEZONE:	        return self::isValidTimeZone($value) ? true : VALIDATE_ERROR_NOT_TIMEZONE;
-            case VALIDATE_URL:				return self::isValidUrl($value) ? true : VALIDATE_ERROR_NOT_URL;
+            case VALIDATE_DO_NOTHING:       return true;
+            //case VALIDATE_EMPTY:          return empty($value) ? VALIDATE_EMPTY : true;
+            case VALIDATE_NOT_EMPTY:        return self::isNotEmpty($value) ? true : VALIDATE_NOT_EMPTY;
+            case VALIDATE_NUMBER:           return self::isNumber($value) ? true : VALIDATE_NUMBER;
+            case VALIDATE_STRING:           return self::isString($value) ? true : VALIDATE_STRING;
+            case VALIDATE_EMAIL:            return self::isEmail($value) ? true : VALIDATE_EMAIL;
+            case VALIDATE_TIMEZONE:         return self::isValidTimeZone($value) ? true : VALIDATE_TIMEZONE;
+            case VALIDATE_URL:              return self::isValidUrl($value) ? true : VALIDATE_URL;
             //TODO: Implement these with new changes
-            // case VALIDATE_LENGTH :			return self::isValidLength($value, $params);
-            //             case VALIDATE_MUST_MATCH_FIELD:	return ($value == $form->data[$params['field']]) ? true : VALIDATE_ERROR_NOT_MATCH_FIELD;
-            //             case VALIDATE_MUST_MATCH_REGEX:	return preg_match($params['regex'], $value) ? true : VALIDATE_ERROR_NOT_MATCH_REGEX;
+            // case VALIDATE_LENGTH :            return self::isValidLength($value, $params);
+            //             case VALIDATE_MUST_MATCH_FIELD:    return ($value == $form->data[$params['field']]) ? true : VALIDATE_MUST_MATCH_FIELD;
+            //             case VALIDATE_MUST_MATCH_REGEX:    return preg_match($params['regex'], $value) ? true : VALIDATE_MUST_MATCH_REGEX;
             //             case VALIDATE_CUSTOM :
             //                 if (isset($params['run_noerror']) && $params['run_noerror'] && $form->itemHasError($name)) {
             //                     return true;
@@ -101,7 +83,7 @@ class Validator {
             //                         }
             //                     }
             //                 }
-            //                 return VALIDATE_ERROR_NOT_IN_LIST;
+            //                 return VALIDATE_IN_DATA_LIST;
             //                 break;
         }
     }
@@ -171,13 +153,13 @@ class Validator {
 
         if (isset($params['min'])) {
             if (strlen($value) < $params['min']) {
-                return VALIDATE_ERROR_TOO_SHORT;
+                return VALIDATE_LENGTH;
             }
         }
 
         if (isset($params['max'])) {
             if (strlen($value) > $params['max']) {
-                return VALIDATE_ERROR_TOO_LONG;
+                return VALIDATE_LENGTH;
             }
         }
         return true;
