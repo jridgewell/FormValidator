@@ -19,25 +19,25 @@ class Form {
      * Will also be included in the $this->error() output
      * @var String
      */
-    static public $cssErrorClass = 'error';
+    public $cssErrorClass = 'error';
 
     /**
      * Stores the tagname that wil wrap error messages
      * @var String
      */
-    static public $errorWrapperTag = 'p';
+    public $errorWrapperTag = 'p';
 
     /**
      * Stores any errors the form has after validation
      * @var Map
      */
-    public $errors = array();
+    private $errors = array();
 
     /**
      * Stores the validation array, this is overridden by the child class
      * @var Map
      */
-    public $validation = array();
+    private $validation = array();
 
     /**
      * Stores the Form data
@@ -239,14 +239,14 @@ class Form {
                 $er = array();
                 foreach ($message as $errorCode => $m) {
                     if ($this->elementHasError($name, $errorCode)) {
-                        $er[] = '<' . self::$errorWrapperTag . ' class="' . self::$cssErrorClass . '">'
-                            . $m . '</' . self::$errorWrapperTag . '>';
+                        $er[] = '<' . $this->errorWrapperTag . ' class="' . $this->cssErrorClass . '">'
+                            . $m . '</' . $this->errorWrapperTag . '>';
                     }
                 }
                 echo implode("\n", $er);
             } else {
-                echo '<' . self::$errorWrapperTag . ' class="' . self::$cssErrorClass . '">'
-                    . $message . '</' . self::$errorWrapperTag . '>';
+                echo '<' . $this->errorWrapperTag . ' class="' . $this->cssErrorClass . '">'
+                    . $message . '</' . $this->errorWrapperTag . '>';
             }
         }
     }
@@ -267,9 +267,9 @@ class Form {
         // Add the error class if the element has an error
         if ($this->elementHasError($name)) {
             if (isset($attributes['class'])) {
-                $attributes['class'] .= ' ' . self::$cssErrorClass;
+                $attributes['class'] .= ' ' . $this->cssErrorClass;
             } else {
-                $attributes['class'] = self::$cssErrorClass;
+                $attributes['class'] = $this->cssErrorClass;
             }
         }
 
