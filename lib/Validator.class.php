@@ -86,7 +86,7 @@ class Validator {
      * @return Boolean
      */
     static public function isNotEmpty($value) {
-        return !empty($value);
+        return (strlen($value) > 0);
     }
 
     /**
@@ -95,7 +95,7 @@ class Validator {
      * @return Boolean
      */
     static public function isNumber($value) {
-        return filter_var($value, FILTER_VALIDATE_INT) !== false;
+        return (filter_var($value, FILTER_VALIDATE_INT) !== false);
     }
 
     /**
@@ -113,7 +113,7 @@ class Validator {
      * @return Boolean
      */
     static public function isEmail($value) {
-        return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
+        return (filter_var($value, FILTER_VALIDATE_EMAIL) !== false);
     }
 
     /**
@@ -131,7 +131,7 @@ class Validator {
      * @return Boolean
      */
     static public function isValidUrl($value) {
-        return filter_var($value, FILTER_VALIDATE_URL) !== false;
+        return (filter_var($value, FILTER_VALIDATE_URL) !== false);
     }
 
 
