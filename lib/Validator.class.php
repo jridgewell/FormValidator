@@ -85,7 +85,7 @@ class Validator {
      * @param array $value
      * @return Boolean
      */
-    static public function isNotEmpty($value) {
+    static private function isNotEmpty($value) {
         return (strlen($value) > 0);
     }
 
@@ -94,7 +94,7 @@ class Validator {
      * @param int $value
      * @return Boolean
      */
-    static public function isNumber($value) {
+    static private function isNumber($value) {
         return (filter_var($value, FILTER_VALIDATE_INT) !== false);
     }
 
@@ -103,7 +103,7 @@ class Validator {
      * @param String $value
      * @return Boolean
      */
-    static public function isString($value) {
+    static private function isString($value) {
         return true;
     }
 
@@ -112,7 +112,7 @@ class Validator {
      * @param String $value
      * @return Boolean
      */
-    static public function isEmail($value) {
+    static private function isEmail($value) {
         return (filter_var($value, FILTER_VALIDATE_EMAIL) !== false);
     }
 
@@ -121,7 +121,7 @@ class Validator {
      * @param String $value
      * @return Boolean
      */
-    static public function isValidTimeZone($value) {
+    static private function isValidTimeZone($value) {
         return in_array($value, timezone_identifiers_list());
     }
 
@@ -130,7 +130,7 @@ class Validator {
      * @param String $url
      * @return Boolean
      */
-    static public function isValidUrl($value) {
+    static private function isValidUrl($value) {
         return (filter_var($value, FILTER_VALIDATE_URL) !== false);
     }
 
@@ -141,7 +141,7 @@ class Validator {
      * @param Object    $form
      * @param Array     $params
      */
-    static public function valueIsSameAs($value, $form, $params) {
+    static private function valueIsSameAs($value, $form, $params) {
         return ($value === $form->getDataForName($params['field'], $form->data));
     }
 
@@ -151,7 +151,7 @@ class Validator {
      * @param Map $params
      * @return Boolean
      */
-    static public function isValidLength($value, $params) {
+    static private function isValidLength($value, $params) {
 
         if (isset($params['min'])) {
             if (strlen($value) < $params['min']) {
