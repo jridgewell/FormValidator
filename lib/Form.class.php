@@ -31,26 +31,26 @@ class Form {
      * Stores any errors the form has after validation
      * @var Map
      */
-    private $errors = array();
+    protected $errors = array();
 
     /**
      * Stores the validation array, this is overridden by the child class
      * @var Map
      */
-    private $validation = array();
+    protected $validation = array();
 
     /**
      * Stores the Form data
      * @var Map
      */
-    private $data = array();
+    protected $data = array();
 
 
     /**
      * Stores the list data for any elements that use lists, eg Select
      * @var Map
      */
-    private $listData = array();
+    protected $listData = array();
 
     /**
      * Loads the specified form file and initializes it
