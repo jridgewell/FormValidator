@@ -179,7 +179,7 @@ class Form {
      * @param Int $errorCode
      * @return Boolean
      */
-    protected function elementHasError($name, $errorCode=false) {
+    public function elementHasError($name, $errorCode=false) {
         $error = $this->getDataForName($name, $this->errors);
         if (isset($error)) {
             if (!$errorCode) {
