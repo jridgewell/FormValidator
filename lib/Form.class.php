@@ -75,7 +75,7 @@ class Form {
      * @param String $name
      * @param array $data
      */
-    public function addListData($name, $data) {
+    protected function addListData($name, $data) {
         $this->setDataForName($data, $name, $this->listData);
     }
 
@@ -98,7 +98,7 @@ class Form {
         array_walk(
             $this->validation,
             array($this, 'validationWalk'),
-            array('', $_POST, &$this->data)
+            '' // The FieldName will be built recursively
         );
         // Call the subclass when the verify is finished, so they don't have to override the validation method
         if (method_exists($this, 'verify')) {
@@ -108,18 +108,15 @@ class Form {
         return !$this->hasErrors() ? $this->data : null;
     }
 
-
     /**
      * Validates posted data against a particular rule
+     * @param String $value
+     * @param String $key
      * @param String $name
-     * @param int $rule
      */
-    function validationWalk($value, $key, $args) {
-        $name = $args[0];
-        $from = $args[1];
-        $to = &$args[2];
+    protected function validationWalk($value, $key, $fieldName) {
         if (!is_array($value)
-            || in_array($value[0],
+            || (isset($value[0]) && in_array($value[0],
                 array(
                     VALIDATE_IN_DATA_LIST,
                     VALIDATE_CUSTOM,
@@ -127,34 +124,24 @@ class Form {
                     VALIDATE_MUST_MATCH_FIELD,
                     VALIDATE_MUST_MATCH_REGEX
                 )
-            )
+            ))
         ) {
-            $to = $from;
-            $ret = Validator::isElementValid($value, $from, $name, $this);
+            $postedData = $this->getDataForName($fieldName, $_POST);
+            $this->setDataForName($postedData, $fieldName, $this->data);
+            $ret = Validator::isElementValid($value, $postedData, $fieldName, $this);
             if ($ret !== true) {
-                $this->invalidateElement($name, $ret);
+                $this->invalidateElement($fieldName, $ret);
             }
         } else {
             if ($key === '[]') {
-                foreach($from as $k => $p) {
-                    $name .= '[' . $k . ']';
-                    $to[$k] = array();
-                    $args = array (
-                        $name,
-                        $p,
-                        &$to[$k],
-                    );
-                    array_walk($value, array($this, 'validationWalk'), $args);
+                $postedKeys = array_keys($this->getDataForName($fieldName, $_POST));
+                foreach($postedKeys as $key) {
+                    $fName = $fieldName . '[' . $key . ']';
+                    array_walk($value, array($this, 'validationWalk'), $fName);
                 }
             } else {
-                $name .= '[' . $key . ']';
-                $to[$key] = array();
-                $args = array (
-                    $name,
-                    $from[$key],
-                    &$to[$key],
-                );
-                array_walk($value, array($this, 'validationWalk'), $args);
+                $fieldName .= '[' . $key . ']';
+                array_walk($value, array($this, 'validationWalk'), $fieldName);
             }
         }
     }
@@ -192,7 +179,7 @@ class Form {
      * @param Int $errorCode
      * @return Boolean
      */
-    public function elementHasError($name, $errorCode=false) {
+    protected function elementHasError($name, $errorCode=false) {
         $error = $this->getDataForName($name, $this->errors);
         if (isset($error)) {
             if (!$errorCode) {
@@ -213,7 +200,7 @@ class Form {
      * @param String $name
      * @param Int $errorCode
      */
-    public function invalidateElement($name, $errorCode) {
+    protected function invalidateElement($name, $errorCode) {
         $element = &$this->getDataForName($name, $this->errors);
         if (isset($element)) {
             if (!is_array($element)) {
@@ -308,7 +295,7 @@ class Form {
         return $base;
     }
 
-     public function setDataForName($data, $name, &$base) {
+     protected function setDataForName($data, $name, &$base) {
         $pieces = explode('[', $name);
         if ($pieces[0] === '') {
             array_shift($pieces);
