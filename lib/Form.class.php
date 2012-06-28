@@ -92,8 +92,6 @@ class Form {
 
     /**
      * validates the form against the current validation rules
-     * @param String $name
-     * @param Int $errorCode
      * @return array
      */
     public function validate() {
