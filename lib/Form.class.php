@@ -434,8 +434,8 @@ class Validator {
             case VALIDATE_TIMEZONE:         return (self::isValidTimeZone($value) ? true : VALIDATE_TIMEZONE);
             case VALIDATE_URL:              return (self::isValidUrl($value) ? true : VALIDATE_URL);
             case VALIDATE_MUST_MATCH_FIELD: return (self::isValueSameAs($value, $form, $params) ? true : VALIDATE_MUST_MATCH_FIELD);
-            case VALIDATE_LENGTH:           return (self::isValidLength($value, $params) ? true : VALIDATE_LENGTH);
             case VALIDATE_MUST_MATCH_REGEX: return (preg_match($params['regex'], $value) ? true : VALIDATE_MUST_MATCH_REGEX);
+            case VALIDATE_LENGTH:           return self::isValidLength($value, $params);
             case VALIDATE_CUSTOM:
                  if (!call_user_func(array($form, $params['callback']), $value, $params)) {
                     return $params['errorCode'];
