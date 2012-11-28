@@ -149,7 +149,7 @@ Constants with parameters: (Examples below)
     </tr>
     <tr>
         <td>VALIDATE_CUSTOM:</td>
-        <td>The field value is checked against the provided callback. This takes the two parameters: the first being a valid PHP callback, and the second being the validation errorCode to raise if the callback returns false</td>
+        <td>The field value is checked against the provided callback. This takes the at least two parameters: the first being a valid PHP callback, and the second being the validation errorCode to raise if the callback returns false. The call back must take two parameters, the first being the value of the field, the second an array with all the data from validation.</td>
     </tr>
     <tr>
         <td>VALIDATE_LENGTH:</td>
@@ -170,9 +170,9 @@ Constants with parameters: (Examples below)
 ### VALIDATE_IN_DATA_LIST
 FormValidator can also generate and validate select lists. There are two methods to do this:
 
-1. By suppling an array as VALIDATE_IN_DATA_LIST's parameter
+1. By suppling an array as VALIDATE_IN_DATA_LIST's list parameter
 2. Using the method `$form->addListData("FieldName", array(...));` and
-   supplying no parameter to VALIDATE_IN_DATA_LIST
+   supplying no list parameter to VALIDATE_IN_DATA_LIST
 
 **Note:** The array can either be a hash of key/values or just values. If you pass in a hash, then the key will be returned.
 
