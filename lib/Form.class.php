@@ -2,6 +2,7 @@
 
 /**
  * @author Matt Labrum <matt@labrum.me>
+ * @author Justin Ridgewell
  * @license Beerware
  * @link url
  */
@@ -19,6 +20,7 @@ define('VALIDATE_LENGTH', -4);
 define('VALIDATE_MUST_MATCH_FIELD', -3);
 define('VALIDATE_MUST_MATCH_REGEX', -2);
 define('VALIDATE_UPLOAD', -1);
+
 
 class Form {
 
