@@ -21,6 +21,7 @@ In this example, the form validator checks if `name` isn't empty
 #### index.php (the controller)
 ```php
 <?php
+    require_once("test.form.php")
     $form = new TestForm();
 
     /* Checks if the form has submitted then the form is checked for validation against the rules contained
