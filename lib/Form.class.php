@@ -146,6 +146,10 @@ class Form {
 			if (strlen($fieldName) === 0) {
 				$fieldName = $key;
 			}
+			if ($value[0] === VALIDATE_MUST_MATCH_FIELD) {
+				$value['field'] = $this->getDataForName($value['field'], $_POST);
+			}			
+			
             $postedData = $this->getDataForName($fieldName, $_POST);
             $this->setDataForName($postedData, $fieldName, $this->data);
             $ret = Validator::isElementValid($value, $postedData, $fieldName, $this);
@@ -436,8 +440,6 @@ class Validator {
             case VALIDATE_EMAIL:            return (self::isEmail($value) ? true : VALIDATE_EMAIL);
             case VALIDATE_TIMEZONE:         return (self::isValidTimeZone($value) ? true : VALIDATE_TIMEZONE);
             case VALIDATE_URL:              return (self::isValidUrl($value) ? true : VALIDATE_URL);
-            case VALIDATE_MUST_MATCH_FIELD: return (self::isValueSameAs($value, $form, $params) ? true : VALIDATE_MUST_MATCH_FIELD);
-            case VALIDATE_MUST_MATCH_REGEX: return (preg_match($params['regex'], $value) ? true : VALIDATE_MUST_MATCH_REGEX);
             case VALIDATE_LENGTH:           return self::isValidLength($value, $params);
             case VALIDATE_CUSTOM:
                  if (!call_user_func(array($form, $params['callback']), $value, $params)) {
@@ -548,8 +550,8 @@ class Validator {
      * @param Object    $form
      * @param Array     $params
      */
-    static private function isValueSameAs($value, $form, $params) {
-        return ($value === $form->getDataForName($params['field'], $form->data));
+    static private function isValueSameAs($value, $value2) {
+        return ($value === $value2['field']);
     }
 }
 
