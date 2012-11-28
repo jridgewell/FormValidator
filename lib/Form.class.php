@@ -440,6 +440,8 @@ class Validator {
             case VALIDATE_EMAIL:            return (self::isEmail($value) ? true : VALIDATE_EMAIL);
             case VALIDATE_TIMEZONE:         return (self::isValidTimeZone($value) ? true : VALIDATE_TIMEZONE);
             case VALIDATE_URL:              return (self::isValidUrl($value) ? true : VALIDATE_URL);
+            case VALIDATE_MUST_MATCH_FIELD: return (self::isValueSameAs($value, $params) ? true : VALIDATE_MUST_MATCH_FIELD);
+            case VALIDATE_MUST_MATCH_REGEX: return (self::doesRegexMatch($value, $params) ? true : VALIDATE_MUST_MATCH_REGEX);
             case VALIDATE_LENGTH:           return self::isValidLength($value, $params);
             case VALIDATE_CUSTOM:
                  if (!call_user_func(array($form, $params['callback']), $value, $params)) {
@@ -553,5 +555,9 @@ class Validator {
     static private function isValueSameAs($value, $value2) {
         return ($value === $value2['field']);
     }
+	
+	static private function doesRegexMatch($value, $params) {
+		return preg_match($params['regex'], $value);
+	}
 }
 
