@@ -39,15 +39,15 @@ class Validator {
         }
         switch($rule) {
             case VALIDATE_DO_NOTHING:       return true;
-            case VALIDATE_NOT_EMPTY:        return self::isNotEmpty($value)                     ? true : VALIDATE_NOT_EMPTY;
-            case VALIDATE_NUMBER:           return self::isNumber($value)                       ? true : VALIDATE_NUMBER;
-            case VALIDATE_STRING:           return self::isString($value)                       ? true : VALIDATE_STRING;
-            case VALIDATE_EMAIL:            return self::isEmail($value)                        ? true : VALIDATE_EMAIL;
-            case VALIDATE_TIMEZONE:         return self::isValidTimeZone($value)                ? true : VALIDATE_TIMEZONE;
-            case VALIDATE_URL:              return self::isValidUrl($value)                     ? true : VALIDATE_URL;
-            case VALIDATE_MUST_MATCH_FIELD: return self::isValueSameAs($value, $form, $params)  ? true : VALIDATE_MUST_MATCH_FIELD;
-            case VALIDATE_LENGTH:           return self::isValidLength($value, $params)         ? true : VALIDATE_LENGTH;
-            case VALIDATE_MUST_MATCH_REGEX: return preg_match($params['regex'], $value)         ? true : VALIDATE_MUST_MATCH_REGEX;
+            case VALIDATE_NOT_EMPTY:        return (self::isNotEmpty($value) ? true : VALIDATE_NOT_EMPTY);
+            case VALIDATE_NUMBER:           return (self::isNumber($value) ? true : VALIDATE_NUMBER);
+            case VALIDATE_STRING:           return (self::isString($value) ? true : VALIDATE_STRING);
+            case VALIDATE_EMAIL:            return (self::isEmail($value) ? true : VALIDATE_EMAIL);
+            case VALIDATE_TIMEZONE:         return (self::isValidTimeZone($value) ? true : VALIDATE_TIMEZONE);
+            case VALIDATE_URL:              return (self::isValidUrl($value) ? true : VALIDATE_URL);
+            case VALIDATE_MUST_MATCH_FIELD: return (self::isValueSameAs($value, $form, $params) ? true : VALIDATE_MUST_MATCH_FIELD);
+            case VALIDATE_LENGTH:           return (self::isValidLength($value, $params) ? true : VALIDATE_LENGTH);
+            case VALIDATE_MUST_MATCH_REGEX: return (preg_match($params['regex'], $value) ? true : VALIDATE_MUST_MATCH_REGEX);
             case VALIDATE_CUSTOM:
                  if (!call_user_func(array($form, $params['callback']), $value, $params)) {
                     return $params['errorCode'];
