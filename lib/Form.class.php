@@ -61,7 +61,6 @@ class Form {
      */
     protected $data = array();
 
-
     /**
      * Stores the list data for any elements that use lists, eg Select
      * @var Map
@@ -94,6 +93,7 @@ class Form {
     protected function addListData($name, $data) {
         $this->setDataForName($data, $name, $this->listData);
     }
+	
 
     /**
      * retrieves stored list data
@@ -143,6 +143,9 @@ class Form {
                 )
             ))
         ) {
+			if (strlen($fieldName) === 0) {
+				$fieldName = $key;
+			}
             $postedData = $this->getDataForName($fieldName, $_POST);
             $this->setDataForName($postedData, $fieldName, $this->data);
             $ret = Validator::isElementValid($value, $postedData, $fieldName, $this);
