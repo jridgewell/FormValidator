@@ -95,6 +95,7 @@ class Form {
      * @return array
      */
     public function validate() {
+		$this->errors = array();
         array_walk(
             $this->validation,
             array($this, 'validationWalk'),
