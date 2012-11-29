@@ -12,7 +12,7 @@ In this example, the form validator checks if `name` isn't empty
 <?php
     class TestForm extends Form {
         public $validation = array( // Contains a hash array of form elements
-            "name" => VALIDATE_NOT_EMPTY // name field must contain something
+            'name' => VALIDATE_NOT_EMPTY // name field must contain something
         );
     }
 ?>
@@ -21,7 +21,7 @@ In this example, the form validator checks if `name` isn't empty
 #### index.php (the controller)
 ```php
 <?php
-    require_once("test.form.php")
+    require_once('test.form.php')
     $form = new TestForm();
 
     /* Checks if the form has submitted then the form is checked for validation against the rules contained
@@ -33,18 +33,18 @@ In this example, the form validator checks if `name` isn't empty
 
     } else {
         // Form hasn't posted or hasn't passed validation, so we load our html file
-        require_once("form.html.php");
+        require_once('form.html.php');
     }
 ?>
 ```
 
 #### form.html.php (the view)
 ```php
-    <form name="input" method="POST">
-    <?php $form->error("name", "There was an error"); ?>
+    <form name='input' method='POST'>
+    <?php $form->error('name', 'There was an error'); ?>
 
-    Please Enter your name: <?php $form->input("name"); ?><br/>
-    <?php $form->submitButton("Submit");?>
+    Please Enter your name: <?php $form->input('name'); ?><br/>
+    <?php $form->submitButton('Submit');?>
     </form>
 ```
 
@@ -58,8 +58,8 @@ The `$validation` array contains all the form fields and rules that need to pass
 <?php
     class TestForm extends Form{
         public $validation = array(
-            "name" => VALIDATE_NOT_EMPTY,
-            "age"   => array( //Specifiy multiple rules
+            'name' => VALIDATE_NOT_EMPTY,
+            'age'   => array( //Specifiy multiple rules
                 VALIDATE_NOT_EMPTY,
                 VALIDATE_NUMBER
             )
@@ -72,18 +72,18 @@ In our html file, if we wanted to show different errors for the different age va
 
 ```php
 <?php
-    <form name="input" method="POST">
-    <?php $form->error("name", "There was an error"); ?>
+    <form name='input' method='POST'>
+    <?php $form->error('name', 'There was an error'); ?>
 
-    Please Enter your name: <?php $form->input("name"); ?><br/>
+    Please Enter your name: <?php $form->input('name'); ?><br/>
 
-    <?php $form->error("age", array(
-        VALIDATE_NOT_EMPTY    => "Sorry, age can't be left empty",
-        VALIDATE_NUMBER       => "Sorry, age has to be a number"
+    <?php $form->error('age', array(
+        VALIDATE_NOT_EMPTY    => 'Sorry, age can't be left empty',
+        VALIDATE_NUMBER       => 'Sorry, age has to be a number'
     )); ?>
 
-    Please Enter your age: <?php $form->input("age"); ?><br/>
-    <?php $form->submitButton("Submit");?>
+    Please Enter your age: <?php $form->input('age'); ?><br/>
+    <?php $form->submitButton('Submit');?>
     </form>
 ?>
 ```
@@ -95,14 +95,14 @@ The `$validation` array also supports passing in parameters into the validation 
 <?php
     class TestForm extends Form {
         public $validation = array(
-            "name" => VALIDATE_NOT_EMPTY, // name field must contain something
-            "age"   => array(
+            'name' => VALIDATE_NOT_EMPTY, // name field must contain something
+            'age'   => array(
                 VALIDATE_NOT_EMPTY,
                 VALIDATE_NUMBER,
                 array(
                     VALIDATE_LENGTH,
-                    "min"  => 0,
-                    "max" => 100
+                    'min'  => 0,
+                    'max' => 100
                 )
             )
         )
@@ -144,20 +144,20 @@ The `$validation` array also supports passing in parameters into the validation 
 Constants with parameters: (Examples below)
 
 <table>
-	<tr>
-		<th colspan="2">Please Note: These constants must be wrapped in an array() if they supply parameters</th>
-	</tr>
+    <tr>
+        <th colspan='2'>Please Note: These constants must be wrapped in an array() if they supply parameters</th>
+    </tr>
     <tr>
         <td>VALIDATE_IN_DATA_LIST:</td>
         <td>See below</td>
     </tr>
     <tr>
         <td>VALIDATE_CUSTOM:</td>
-        <td>The field value is checked against the provided callback. This takes the at least two parameters: the first being a valid PHP callback, and the second being the validation errorCode to raise if the callback returns false. The call back must take two parameters, the first being the value of the field, the second an array with all the data from $validation.</td>
+        <td>See below</td>
     </tr>
     <tr>
         <td>VALIDATE_LENGTH:</td>
-        <td>The field must be between the provided values. This takes two optional parameters, "min" and "max"</td>
+        <td>The field must be between the provided values. This takes two optional parameters, 'min' and 'max'</td>
     </tr>
     <tr>
         <td>VALIDATE_MUST_MATCH_FIELD:</td>
@@ -175,7 +175,7 @@ Constants with parameters: (Examples below)
 FormValidator can also generate and validate select lists. There are two methods to do this:
 
 1. By suppling an array as VALIDATE_IN_DATA_LIST's list parameter
-2. Using the method `$form->addListData("FieldName", array(...));` and
+2. Using the method `$form->addListData('FieldName', array(...));` and
    supplying no list parameter to VALIDATE_IN_DATA_LIST
 
 **Note:** The array can either be a hash of key/values or just values. If you pass in a hash, then the key will be returned.
@@ -186,16 +186,16 @@ For example lets say we wanted to show and validate a list of usernames
 <?php
     class TestForm extends Form{
         public $validation = array( // Contains a hash array of form elements
-            "usernames" => array(
-				array(
-	                VALIDATE_IN_DATA_LIST,
-	                'useKeys' => true,
-	                'list' => array(
-	                    500 => 'Matt',
-	                    300 => 'Thor',
-	                    1   => 'Asa'
-	                )
-				)
+            'usernames' => array(
+                array(
+                    VALIDATE_IN_DATA_LIST,
+                    'useKeys' => true,
+                    'list' => array(
+                        500 => 'Matt',
+                        300 => 'Thor',
+                        1   => 'Asa'
+                    )
+                )
             )
         );
     }
@@ -206,7 +206,7 @@ For example lets say we wanted to show and validate a list of usernames
         VALIDATE_IN_DATA_LIST => 'Not in list'
     ));
     // Display a select containing the usernames
-    $form->select("usernames", null, array(
+    $form->select('usernames', null, array(
         500 => 'Matt',
         300 => 'Thor',
         1   => 'Asa'
@@ -220,12 +220,12 @@ or
 <?php
     class TestForm extends Form{
         public $validation = array( // Contains a hash array of form elements
-                "usernames" => VALIDATE_IN_DATA_LIST
+                'usernames' => VALIDATE_IN_DATA_LIST
                 );
 
         public function __construct(){
-            $usernames = array(500 => "Matt", 300 => "Thor", 1 => "Asa", 5 => "Martina", 9 => "John", 12 => "Kate"); // Fetch our usernames from the database, with the keys being their userID
-            $this->addListData("usernames", $usernames); // Add the list data
+            $usernames = array(500 => 'Matt', 300 => 'Thor', 1 => 'Asa', 5 => 'Martina', 9 => 'John', 12 => 'Kate'); // Fetch our usernames from the database, with the keys being their userID
+            $this->addListData('usernames', $usernames); // Add the list data
         }
     }
 
@@ -236,21 +236,26 @@ or
     ));
     // Display a select containing the usernames
     // Select will be populated from $form->listData
-    $form->select("usernames");
+    $form->select('usernames');
 ?>
 ```
 
 ### VALIDATE_CUSTOM
+The field value is checked against the provided callback. This takes the at least one parameter: a valid PHP callback. The callback must take two parameters, the first being the value of the field, the second an array with all the data from the VALIDATE_CUSTOM in $validation.
+
+VALIDATE_CUSTOM can optionally take a errorCode parameter, which will be returned instead of VALIDATE_CUSTOM if the field does not validate.
+
 ```php
 <?php
     class TestForm extends Form {
         public $validation = array(
-            "checkCustom" => array(
+            'checkCustom' => array(
                 array(
                     VALIDATE_CUSTOM,
-                    "callback" => 'myCallback',
-                    "param1"   => 'These will be passed',
-                    "param2"   => 'to myCallback as $params'
+                    'callback' => 'myCallback',
+                    'errorCode' => 'MY_CUSTOM_ERROR_CODE'
+                    'param1'   => 'These will be passed',
+                    'param2'   => 'to myCallback as $params'
                 )
             )
         )
@@ -259,6 +264,9 @@ or
             // This method must be public!
             // Check the submitted value ($fieldValue)
             // with the $params you specified in $validation
+            // eg. $params = array(VALIDATE_CUSTOM, 'callback' => 'myCallback',
+            //     'errorCode' => 'MY_CUSTOM_ERROR_CODE', 'param1' => 'These will be passed',
+            //     'param2'   => 'to myCallback as $params')
         }
     }
 ?>
@@ -269,12 +277,12 @@ or
 <?php
     class TestForm extends Form {
         public $validation = array(
-            "length" => array(
+            'length' => array(
                 VALIDATE_NOT_EMPTY,
                 array(
                     VALIDATE_LENGTH,
-                    "min" => 0,
-                    "max" => 100
+                    'min' => 0,
+                    'max' => 100
                 )
             )
         )
@@ -287,12 +295,12 @@ or
 <?php
     class TestForm extends Form {
         public $validation = array(
-            "password"      => VALIDATE_NOT_EMPTY,
-            "repassword"    => array(
+            'password'      => VALIDATE_NOT_EMPTY,
+            'repassword'    => array(
                 VALIDATE_NOT_EMPTY,
                 array(
                     VALIDATE_MUST_MATCH_FIELD,
-                    "field" => 'password'
+                    'field' => 'password'
                 )
             )
         )
@@ -305,10 +313,10 @@ or
 <?php
     class TestForm extends Form {
         public $validation = array(
-            "regCheck" => array(
+            'regCheck' => array(
                 array(
                     VALIDATE_MUST_MATCH_REGEX,
-                    "regex" => '/[a-zA-Z0-9]+/'
+                    'regex' => '/[a-zA-Z0-9]+/'
                 )
             )
         )
