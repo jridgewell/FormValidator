@@ -144,13 +144,16 @@ The `$validation` array also supports passing in parameters into the validation 
 Constants with parameters: (Examples below)
 
 <table>
+	<tr>
+		<th colspan="2">Please Note: These constants must be wrapped in an array() if they supply parameters</th>
+	</tr>
     <tr>
         <td>VALIDATE_IN_DATA_LIST:</td>
         <td>See below</td>
     </tr>
     <tr>
         <td>VALIDATE_CUSTOM:</td>
-        <td>The field value is checked against the provided callback. This takes the at least two parameters: the first being a valid PHP callback, and the second being the validation errorCode to raise if the callback returns false. The call back must take two parameters, the first being the value of the field, the second an array with all the data from validation.</td>
+        <td>The field value is checked against the provided callback. This takes the at least two parameters: the first being a valid PHP callback, and the second being the validation errorCode to raise if the callback returns false. The call back must take two parameters, the first being the value of the field, the second an array with all the data from $validation.</td>
     </tr>
     <tr>
         <td>VALIDATE_LENGTH:</td>
@@ -184,13 +187,15 @@ For example lets say we wanted to show and validate a list of usernames
     class TestForm extends Form{
         public $validation = array( // Contains a hash array of form elements
             "usernames" => array(
-                VALIDATE_IN_DATA_LIST,
-                'useKeys' => true,
-                'list' => array(
-                    500 => 'Matt',
-                    300 => 'Thor',
-                    1   => 'Asa'
-                )
+				array(
+	                VALIDATE_IN_DATA_LIST,
+	                'useKeys' => true,
+	                'list' => array(
+	                    500 => 'Matt',
+	                    300 => 'Thor',
+	                    1   => 'Asa'
+	                )
+				)
             )
         );
     }
