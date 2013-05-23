@@ -9,9 +9,7 @@
 
 namespace FormValidator;
 
-use \FormValidator\FileDoesntExistException;
 use \FormValidator\Validation;
-use \FormValidator\Validator;
 
 class Form {
 
