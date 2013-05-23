@@ -6,7 +6,6 @@ class Validation {
     /**
      * The validation rules that can be used
      */
-
     public static function anything() {
         return function() {
             return true;
@@ -19,17 +18,17 @@ class Validation {
         };
     }
 
-    public static function length($options) {
-        $max = (self::option('max', $options)) ?: PHP_INT_MAX;
-        $min = (self::option('min', $options)) ?: 0;
+    public static function length($options = array()) {
+        $max = (self::option('max', $options)) ? $options['max'] : PHP_INT_MAX;
+        $min = (self::option('min', $options)) ? $options['min'] : 0;
         return function($val) use ($max, $min) {
             $len = strlen($val);
             return ($min <= $len && $len <= $max);
         };
     }
 
-    public static function numericality($options) {
-        $filter = (self::option('only_integer')) ? FILTER_VALIDATE_INT : FILTER_VALIDATE_FLOAT;
+    public static function numericality($options = array()) {
+        $filter = (self::option('only_integer', $options)) ? FILTER_VALIDATE_INT : FILTER_VALIDATE_FLOAT;
         $filter_function = function($val) use ($filter) {
             return (filter_var($val, $filter) !== false);
         };
@@ -74,7 +73,7 @@ class Validation {
 
     public static function format($regex) {
         return function($val) use ($regex) {
-            return preg_match($regex, $value);
+            return (preg_match($regex, $val) === 1) ? true : false;
         };
     }
 
@@ -84,16 +83,14 @@ class Validation {
         };
     }
 
-    public static function inclusion($options) {
-        $list_key = (self::option('in', $options)) ? 'in' : 'within';
-        $list = $options[$list_key];
+    public static function inclusion($list) {
         return function($val) use ($list) {
             return in_array($val, $list, true);
         };
     }
 
     private static function option($name, $options) {
-        return ($options[$name] && $options[$name] === true);
+        return array_key_exists($name, $options);
     }
 
 }

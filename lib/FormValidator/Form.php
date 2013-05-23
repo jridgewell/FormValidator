@@ -125,40 +125,24 @@ class Form {
      * @param String $name
      */
     protected function validationWalk($value, $key, $fieldName) {
-        if (!is_array($value)
-            || (isset($value[0]) && in_array($value[0],
-                array(
-                    Validation::IN_DATA_LIST,
-                    Validation::CUSTOM,
-                    Validation::LENGTH,
-                    Validation::MUST_MATCH_FIELD,
-                    Validation::MUST_MATCH_REGEX
-                )
-            ))
-        ) {
+        if (is_callable($value)) {
             if (strlen($fieldName) === 0) {
                 $fieldName = $key;
             }
-            if ($value[0] === Validation::MUST_MATCH_FIELD) {
-                $value['field'] = $this->getDataForName($value['field'], $_POST);
-            }
-
             $postedData = $this->getDataForName($fieldName, $_POST);
             $this->setDataForName($postedData, $fieldName, $this->data);
-            $ret = Validator::isElementValid($value, $postedData, $fieldName, $this);
-            if ($ret !== true) {
-                $this->invalidateElement($fieldName, $ret);
+            if ($value($postedData) !== true) {
+                $this->invalidateElement($fieldName, 'error');
             }
         } else {
             if ($key === '[]') {
                 $postedKeys = array_keys($this->getDataForName($fieldName, $_POST));
-                foreach($postedKeys as $key) {
-                    $fName = $fieldName . '[' . $key . ']';
-                    array_walk($value, array($this, 'validationWalk'), $fName);
-                }
             } else {
-                $fieldName .= '[' . $key . ']';
-                array_walk($value, array($this, 'validationWalk'), $fieldName);
+                $postedKeys = array($key);
+            }
+            foreach($postedKeys as $key) {
+                $fName = $fieldName . '[' . $key . ']';
+                array_walk($value, array($this, 'validationWalk'), $fName);
             }
         }
     }
