@@ -1,7 +1,9 @@
 <?php
 
-require_once 'vendor/autoload.php';
-require 'tests/TestForm.php';
+define('__ROOT__', dirname(dirname(__FILE__)));
+
+require_once __ROOT__.'/vendor/autoload.php';
+require_once __ROOT__.'/tests/TestForm.php';
 
 use \FormValidator\Validation;
 
