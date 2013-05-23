@@ -1,5 +1,27 @@
 {
+    "name": "jridgewell/form-validator",
+    "description": "A simple HTML form validator",
+    "keywords": ["HTML", "form", "validator", "validation"],
+    "homepage": "https://github.com/jridgewell/FormValidator",
+    "license": "Beerware",
+    "authors": [
+        {
+            "name": "Justin Ridgewell"
+        },
+        {
+            "name": "Matt Labrum",
+            "email": "matt@labrum.me"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    },
     "require-dev": {
         "phpunit/phpunit": "3.7.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "FormValidator": "lib"
+        }
     }
 }
