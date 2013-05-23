@@ -36,7 +36,7 @@ class Form {
      * Stores the validation array, this is overridden by the child class
      * @var Map
      */
-    protected $validation = array();
+    protected $validations = array();
 
     /**
      * Stores the Form data
@@ -51,7 +51,7 @@ class Form {
     public function validate() {
         $this->errors = array();
         array_walk(
-            $this->validation,
+            $this->validations,
             array($this, 'validationWalk'),
             '' // The FieldName will be built recursively
         );

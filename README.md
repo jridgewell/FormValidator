@@ -1,19 +1,18 @@
-# FormValidator
-FormValidator allows you to create and validate forms using a simple rule based approch.
+# FormValidator [![Build Status](https://travis-ci.org/jridgewell/FormValidator.png?branch=master)](https://travis-ci.org/jridgewell/FormValidator)
+FormValidator allows you to create and validate forms using a simple rule based approach.
 
-[![Build Status](https://travis-ci.org/jridgewell/FormValidator.png?branch=master)](https://travis-ci.org/jridgewell/FormValidator)
 
 ## Basics
 ### Setting up your first form
 
-A form file is just a class that extends the Form class
+A form file is just a class that extends the \FormValidator\Form class
 In this example, the form validator checks if `name` isn't empty
 
 #### test.form.php (the model)
 ```php
 <?php
     class TestForm extends Form {
-        public $validation = array( // Contains a hash array of form elements
+        public $validations = array( // Contains a hash array of form elements
             'name' => VALIDATE_NOT_EMPTY // name field must contain something
         );
     }
@@ -27,7 +26,7 @@ In this example, the form validator checks if `name` isn't empty
     $form = new TestForm();
 
     /* Checks if the form has submitted then the form is checked for validation against the rules contained
-       within the $validation array of TestForm returning the validated data if its successful
+       within the $validations array of TestForm returning the validated data if its successful
      */
 
     if($form->hasPosted() && ($data = $form->validate())) {
@@ -54,12 +53,12 @@ In this example, the form validator checks if `name` isn't empty
 
 
 ## The Validation Array
-The `$validation` array contains all the form fields and rules that need to pass, for the form to be valid. In the example above, it showed a single rule applying to one form element, but you can apply multiple rules to an element by using an array.
+The `$validations` array contains all the form fields and rules that need to pass, for the form to be valid. In the example above, it showed a single rule applying to one form element, but you can apply multiple rules to an element by using an array.
 
 ```php
 <?php
     class TestForm extends Form{
-        public $validation = array(
+        public $validations = array(
             'name' => VALIDATE_NOT_EMPTY,
             'age'   => array( //Specifiy multiple rules
                 VALIDATE_NOT_EMPTY,
@@ -91,12 +90,12 @@ In our html file, if we wanted to show different errors for the different age va
 ```
 
 ### Validation Array Params
-The `$validation` array also supports passing in parameters into the validation constants. This is done by using an array with the constant being the first value and the parameters being the rest of the array.
+The `$validations` array also supports passing in parameters into the validation constants. This is done by using an array with the constant being the first value and the parameters being the rest of the array.
 
 ```php
 <?php
     class TestForm extends Form {
-        public $validation = array(
+        public $validations = array(
             'name' => VALIDATE_NOT_EMPTY, // name field must contain something
             'age'   => array(
                 VALIDATE_NOT_EMPTY,
@@ -113,7 +112,7 @@ The `$validation` array also supports passing in parameters into the validation 
 ```
 
 
-## List of `$validation` Array Constants
+## List of `$validations` Array Constants
 
 
 <table>
@@ -187,7 +186,7 @@ For example lets say we wanted to show and validate a list of usernames
 ```php
 <?php
     class TestForm extends Form{
-        public $validation = array( // Contains a hash array of form elements
+        public $validations = array( // Contains a hash array of form elements
             'usernames' => array(
                 array(
                     VALIDATE_IN_DATA_LIST,
@@ -221,7 +220,7 @@ or
 ```php
 <?php
     class TestForm extends Form{
-        public $validation = array( // Contains a hash array of form elements
+        public $validations = array( // Contains a hash array of form elements
                 'usernames' => VALIDATE_IN_DATA_LIST
                 );
 
@@ -243,14 +242,14 @@ or
 ```
 
 ### VALIDATE_CUSTOM
-The field value is checked against the provided callback. This takes the at least one parameter: a valid PHP callback. The callback must take two parameters, the first being the value of the field, the second an array with all the data from the VALIDATE_CUSTOM in $validation.
+The field value is checked against the provided callback. This takes the at least one parameter: a valid PHP callback. The callback must take two parameters, the first being the value of the field, the second an array with all the data from the VALIDATE_CUSTOM in $validations.
 
 VALIDATE_CUSTOM can optionally take a errorCode parameter, which will be returned instead of VALIDATE_CUSTOM if the field does not validate.
 
 ```php
 <?php
     class TestForm extends Form {
-        public $validation = array(
+        public $validations = array(
             'checkCustom' => array(
                 array(
                     VALIDATE_CUSTOM,
@@ -265,7 +264,7 @@ VALIDATE_CUSTOM can optionally take a errorCode parameter, which will be returne
         public function myCallback($fieldValue, $params) {
             // This method must be public!
             // Check the submitted value ($fieldValue)
-            // with the $params you specified in $validation
+            // with the $params you specified in $validations
             // eg. $params = array(VALIDATE_CUSTOM, 'callback' => 'myCallback',
             //     'errorCode' => 'MY_CUSTOM_ERROR_CODE', 'param1' => 'These will be passed',
             //     'param2'   => 'to myCallback as $params')
@@ -278,7 +277,7 @@ VALIDATE_CUSTOM can optionally take a errorCode parameter, which will be returne
 ```php
 <?php
     class TestForm extends Form {
-        public $validation = array(
+        public $validations = array(
             'length' => array(
                 VALIDATE_NOT_EMPTY,
                 array(
@@ -296,7 +295,7 @@ VALIDATE_CUSTOM can optionally take a errorCode parameter, which will be returne
 ```php
 <?php
     class TestForm extends Form {
-        public $validation = array(
+        public $validations = array(
             'password'      => VALIDATE_NOT_EMPTY,
             'repassword'    => array(
                 VALIDATE_NOT_EMPTY,
@@ -314,7 +313,7 @@ VALIDATE_CUSTOM can optionally take a errorCode parameter, which will be returne
 ```php
 <?php
     class TestForm extends Form {
-        public $validation = array(
+        public $validations = array(
             'regCheck' => array(
                 array(
                     VALIDATE_MUST_MATCH_REGEX,
