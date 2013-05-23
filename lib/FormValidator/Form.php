@@ -55,12 +55,6 @@ class Form {
     protected $data = array();
 
     /**
-     * Stores the list data for any elements that use lists, eg Select
-     * @var Map
-     */
-    protected $listData = array();
-
-    /**
      * Loads the specified form file and initializes it
      * @param String $name
      * @return Form
@@ -77,27 +71,6 @@ class Form {
             throw new FileDoesntExistException();
         }
     }
-
-    /**
-     * Adds list data to the form for validation
-     * @param String $name
-     * @param array $data
-     */
-    protected function addListData($name, $data) {
-        $this->setDataForName($data, $name, $this->listData);
-    }
-
-
-    /**
-     * retrieves stored list data
-     * @param String $name
-     * @return array
-     */
-    public function getListData($name) {
-        $data = $this->getDataForName($name, $this->listData);
-        return isset($data) ? $data : null;
-    }
-
 
     /**
      * validates the form against the current validation rules
@@ -348,21 +321,6 @@ class Form {
         if (isset($data)) {
             $selected = $data;
         }
-
-        // If the passed values are empty, try to get it from the list data the class holds
-        if (empty($values)) {
-            if ($list = $this->getListData($name)) {
-                $values = $list;
-            }
-        }
-
-        // Handle custom select types
-        switch($attributes['type']) {
-            case 'timezone' :
-                $values = timezone_identifiers_list();
-                break;
-        }
-        unset($attributes['type']);
 
         // Convert the name/value key pairs into strings
         $a = array();
