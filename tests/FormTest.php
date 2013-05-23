@@ -99,26 +99,6 @@ class StackTest extends PHPUnit_Framework_TestCase {
         $this->assertFalse($testForm->hasErrors());
     }
 
-    public function testValidateTimeZone() {
-        // Setup
-        $testForm = new TestForm();
-        $testForm->addToValidation('test', Validation::TIMEZONE);
-
-        // test is empty, should create an error
-        $testForm->validate();
-        $this->assertTrue($testForm->hasErrors());
-
-        // test isn't timezone, should create an error
-        $_POST['test'] = 'testing';
-        $testForm->validate();
-        $this->assertTrue($testForm->hasErrors());
-
-        // test is timezone, shouldn't create an error
-        $_POST['test'] = 'America/New_York';
-        $testForm->validate();
-        $this->assertFalse($testForm->hasErrors());
-    }
-
     public function testValidateUrl() {
         // Setup
         $testForm = new TestForm();
