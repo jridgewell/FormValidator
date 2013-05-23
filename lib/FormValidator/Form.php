@@ -14,14 +14,6 @@ use \FormValidator\Validation;
 class Form {
 
     /**
-     * Stores the path of the Forms directory
-     * Forms created using Forms::loadForm() will
-     * be autoloaded from here.
-     * @var String
-     */
-    static public $formDirectory = './Forms/';
-
-    /**
      * Stores the name of the css error to be included on elements that don't pass validation
      * Will also be included in the $this->error() output
      * @var String
@@ -51,24 +43,6 @@ class Form {
      * @var Map
      */
     protected $data = array();
-
-    /**
-     * Loads the specified form file and initializes it
-     * @param String $name
-     * @return Form
-     */
-    static public function loadForm($name) {
-        $name = ucfirst($name);
-        $file = self::$formDirectory . $name . '.form.php';
-
-        if (file_exists($file) && is_readable($file)) {
-            require_once($file);
-            $class = $name . 'Form';
-            return new $class;
-        } else {
-            throw new FileDoesntExistException();
-        }
-    }
 
     /**
      * validates the form against the current validation rules
