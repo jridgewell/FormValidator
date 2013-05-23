@@ -244,9 +244,11 @@ class Form {
         }
 
         // Preserve the saved values if the form fails validation
-        $data = $this->getDataForName($name, $this->data);
-        if (isset($data) && $attributes['type'] != 'password') {
-            $attributes['value'] = $data;
+        if ($attributes['type'] != 'password') {
+            $data = $this->getDataForName($name, $this->data);
+            if (isset($data)) {
+                $attributes['value'] = $data;
+            }
         }
 
         // Convert the name/value key pairs into strings
