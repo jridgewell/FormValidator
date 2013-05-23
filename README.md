@@ -1,6 +1,8 @@
 # FormValidator
 FormValidator allows you to create and validate forms using a simple rule based approch.
 
+[![Build Status](https://travis-ci.org/jridgewell/FormValidator.png?branch=master)](https://travis-ci.org/jridgewell/FormValidator)
+
 ## Basics
 ### Setting up your first form
 
