@@ -51,6 +51,11 @@ class StackTest extends PHPUnit_Framework_TestCase {
         $testForm->validate();
         $this->assertTrue($testForm->hasErrors());
 
+        // test starts numeric but isn't, should create an error
+        $_POST['test'] = '2 testing';
+        $testForm->validate();
+        $this->assertTrue($testForm->hasErrors());
+
         // test is numeric, shouldn't create an error
         $_POST['test'] = '4';
         $testForm->validate();
