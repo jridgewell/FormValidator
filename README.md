@@ -11,9 +11,12 @@ In this example, the form validator checks if `name` isn't empty
 #### test.form.php (the model)
 ```php
 <?php
-    class TestForm extends Form {
+    use \FormValidator\Form;
+    use \FormValidator\Validation;
+
+    class TestForm extends \FormValidator\Form {
         public $validations = array( // Contains a hash array of form elements
-            'name' => VALIDATE_NOT_EMPTY // name field must contain something
+            "name" => Validation::presence() // name field must contain something
         );
     }
 ?>
@@ -49,20 +52,20 @@ In this example, the form validator checks if `name` isn't empty
     </form>
 ```
 
-**Note:** If the form fails validation, by using the `$form->input` method, we preserve whatever value was in that field (except for password fields)
+**Note:** If the form fails validation, by using the `$form->input` method, we preserve whatever value was in that field (**except for password fields**)
 
 
-## The Validation Array
+## The Validations Array
 The `$validations` array contains all the form fields and rules that need to pass, for the form to be valid. In the example above, it showed a single rule applying to one form element, but you can apply multiple rules to an element by using an array.
 
 ```php
 <?php
     class TestForm extends Form{
         public $validations = array(
-            'name' => VALIDATE_NOT_EMPTY,
+            'name' => Validation::presence(),
             'age'   => array( //Specifiy multiple rules
-                VALIDATE_NOT_EMPTY,
-                VALIDATE_NUMBER
+                Validation::presence(),
+                Validation::numericality()
             )
         );
     }
@@ -96,23 +99,23 @@ The `$validations` array also supports passing in parameters into the validation
 <?php
     class TestForm extends Form {
         public $validations = array(
-            'name' => VALIDATE_NOT_EMPTY, // name field must contain something
+            'name' => Validation::presence(), // name field must contain something
             'age'   => array(
-                VALIDATE_NOT_EMPTY,
-                VALIDATE_NUMBER,
-                array(
-                    VALIDATE_LENGTH,
+                Validation::presence(),
+                Validation::numericality(),
+                Validation::length(array(
                     'min'  => 0,
                     'max' => 100
-                )
+				)),
             )
         )
     }
 ?>
 ```
 
-
-## List of `$validations` Array Constants
+#Everything Below is incorrect.
+#Please ignore.
+## List of valid `$validations`
 
 
 <table>
