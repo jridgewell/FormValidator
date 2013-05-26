@@ -1,9 +1,12 @@
 <?php
-	require_once("../lib/Form.class.php");
-	require_once("../lib/Validator.class.php");
+	require_once("vendor/autoload.php");
+
+    use \FormValidator\Form;
+    use \FormValidator\Validation;
+
     class TestForm extends Form {
-        public $validation = array( // Contains a hash array of form elements
-            "name" => VALIDATE_NOT_EMPTY // name field must contain something
+        public $validations = array( // Contains a hash array of form elements
+            "name" => Validation::presence() // name field must contain something
         );
     }
 ?>
