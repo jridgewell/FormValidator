@@ -9,7 +9,7 @@ use \FormValidator\Validation;
 
 class StackTest extends PHPUnit_Framework_TestCase {
 
-    public function testValidateDoNothing() {
+    public function testValidateAnything() {
         // Setup
         $testForm = new TestForm();
         $testForm->addToValidation('test', Validation::anything());
@@ -24,7 +24,7 @@ class StackTest extends PHPUnit_Framework_TestCase {
         $this->assertFalse($testForm->hasErrors());
     }
 
-    public function testValidateNotEmpty() {
+    public function testValidatePresence() {
         // Setup
         $testForm = new TestForm();
         $testForm->addToValidation('test', Validation::presence());
@@ -39,7 +39,18 @@ class StackTest extends PHPUnit_Framework_TestCase {
         $this->assertFalse($testForm->hasErrors());
     }
 
-    public function testValidateNumber() {
+    public function testValidatePresenceIgnoresOptional() {
+        $testForm = new TestForm();
+        $testForm->addToValidation('test', Validation::presence(array(
+            'optional' => true
+        )));
+
+        // Have not accepted, should create error
+        $testForm->validate();
+        $this->assertTrue($testForm->hasErrors());
+    }
+
+    public function testValidateNumericality() {
         // Setup
         $testForm = new TestForm();
         $testForm->addToValidation('test', Validation::numericality());
@@ -60,6 +71,42 @@ class StackTest extends PHPUnit_Framework_TestCase {
 
         // test is numeric, shouldn't create an error
         $_POST['test'] = '4';
+        $testForm->validate();
+        $this->assertFalse($testForm->hasErrors());
+    }
+
+    public function testValidateNumericalityEven() {
+        // Setup
+        $testForm = new TestForm();
+        $testForm->addToValidation('test', Validation::numericality(array(
+            'even' => true
+        )));
+
+        // test is odd, should create an error
+        $_POST['test'] = '3';
+        $testForm->validate();
+        $this->assertTrue($testForm->hasErrors());
+
+        // test is even, shouldn't create an error
+        $_POST['test'] = '2';
+        $testForm->validate();
+        $this->assertFalse($testForm->hasErrors());
+    }
+
+    public function testValidateNumericalityOdd() {
+        // Setup
+        $testForm = new TestForm();
+        $testForm->addToValidation('test', Validation::numericality(array(
+            'odd' => true
+        )));
+
+        // test is even, should create an error
+        $_POST['test'] = '2';
+        $testForm->validate();
+        $this->assertTrue($testForm->hasErrors());
+
+        // test is odd, shouldn't create an error
+        $_POST['test'] = '3';
         $testForm->validate();
         $this->assertFalse($testForm->hasErrors());
     }
@@ -143,10 +190,28 @@ class StackTest extends PHPUnit_Framework_TestCase {
         // Setup
         $testForm = new TestForm();
 
+        // Is
+        $testForm->addToValidation('test', array(Validation::length(array('is' => 1))));
+
+        // test is less than 1, should create an error
+        $testForm->validate();
+        $this->assertTrue($testForm->hasErrors());
+
+        // test is 1, shouldn't create an error
+        $_POST['test'] = '1';
+        $testForm->validate();
+        $this->assertFalse($testForm->hasErrors());
+
+        // test is greater than 1, should create an error
+        $_POST['test'] = '12';
+        $testForm->validate();
+        $this->assertTrue($testForm->hasErrors());
+
         // Min
         $testForm->addToValidation('test', array(Validation::length(array('minimum' => 1))));
 
         // test is less than 1, should create an error
+        $_POST['test'] = '';
         $testForm->validate();
         $this->assertTrue($testForm->hasErrors());
 
@@ -208,7 +273,7 @@ class StackTest extends PHPUnit_Framework_TestCase {
         $this->assertFalse($testForm->hasErrors());
     }
 
-    public function testValidateMustMatchField() {
+    public function testValidateConfirmation() {
         // Setup
         $testForm = new TestForm();
         $_POST['test2'] = 'testing';
@@ -226,7 +291,7 @@ class StackTest extends PHPUnit_Framework_TestCase {
         $this->assertFalse($testForm->hasErrors());
     }
 
-    public function testValidateMustMatchRegex() {
+    public function testValidateFormat() {
         // Setup
         $testForm = new TestForm();
         $testForm->addToValidation('test', Validation::format('/[a-zA-Z0-9]+/'));
@@ -241,7 +306,28 @@ class StackTest extends PHPUnit_Framework_TestCase {
         $this->assertFalse($testForm->hasErrors());
     }
 
-    public function testValidateInList() {
+    public function testValidateExclustion() {
+        // Setup
+        $testForm = new TestForm();
+
+        // list param
+        $testForm->addToValidation('test', array(Validation::exclusion(array(
+            'test1',
+            'test2',
+            'testing'
+        ))));
+
+        // test is in list, shouldn't cause an error
+        $testForm->validate();
+        $this->assertFalse($testForm->hasErrors());
+
+        // test isn't in list, should create an error
+        $_POST['test'] = 'testing';
+        $testForm->validate();
+        $this->assertTrue($testForm->hasErrors());
+    }
+
+    public function testValidateInclusion() {
         // Setup
         $testForm = new TestForm();
 
@@ -288,9 +374,9 @@ class StackTest extends PHPUnit_Framework_TestCase {
         $this->assertFalse($testForm->hasErrors());
     }
 
-    public function testValidateCustom() {
+    public function testValidateValidateWith() {
         $testForm = new TestForm();
-        $testForm->addToValidation('test', array(function($val) {
+        $testForm->addToValidation('test', Validation::validate_with(function($val) {
             return (strpos($val, 'te') === 0);
         }));
 
@@ -301,5 +387,53 @@ class StackTest extends PHPUnit_Framework_TestCase {
         // test does start with 'te', shouldn't create error
         $_POST['test'] = 'testing';
         $testForm->validate();
+        $this->assertFalse($testForm->hasErrors());
     }
+
+    public function testValidateAcceptance() {
+        $testForm = new TestForm();
+        $testForm->addToValidation('test', Validation::acceptance());
+
+        // Have not accepted, should create error
+        $testForm->validate();
+        $this->assertTrue($testForm->hasErrors());
+
+        // test is truthy, shouldn't create error
+        $_POST['test'] = '1';
+        $testForm->validate();
+        $this->assertFalse($testForm->hasErrors());
+    }
+
+    public function testValidateAcceptanceWithAccept() {
+        $testForm = new TestForm();
+        $testForm->addToValidation('test', Validation::acceptance(array(
+            'accept' => 'yes'
+        )));
+
+        // Have not accepted, should create error
+        $testForm->validate();
+        $this->assertTrue($testForm->hasErrors());
+
+        // test isn't our custom truthy, should create error
+        $_POST['test'] = '1';
+        $testForm->validate();
+        $this->assertTrue($testForm->hasErrors());
+
+        // test isn't our custom truthy, shouldn't create error
+        $_POST['test'] = 'yes';
+        $testForm->validate();
+        $this->assertFalse($testForm->hasErrors());
+    }
+
+    public function testValidateAcceptanceIgnoresOptional() {
+        $testForm = new TestForm();
+        $testForm->addToValidation('test', Validation::acceptance(array(
+            'optional' => true
+        )));
+
+        // Have not accepted, should create error
+        $testForm->validate();
+        $this->assertTrue($testForm->hasErrors());
+    }
+
 }
