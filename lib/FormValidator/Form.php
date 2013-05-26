@@ -245,10 +245,17 @@ class Form {
      */
     protected function validationWalk($validation, $key, $fieldName) {
         if (is_callable($validation)) {
+            //If this is a key in the root of $validations
             if (strlen($fieldName) === 0) {
                 $fieldName = $key;
             }
             $postedData = $this->getDataForName($fieldName, $_POST);
+            // This allows a field to have either a array of validations,
+            // or a single validation.
+            if (is_array($postedData) && array_key_exists($key, $postedData)) {
+                $postedData = $postedData[$key];
+                $fieldName .= sprintf("[%s]", $key);
+            }
             $this->setDataForName($postedData, $fieldName, $this->data);
             $ret = $validation($postedData);
             if ($ret !== true) {
