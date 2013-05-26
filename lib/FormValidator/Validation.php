@@ -11,6 +11,9 @@ class Validation {
     }
 
     public static function acceptance($options = array()) {
+        if (array_key_exists('optional', $options)) {
+            $options['optional'] = false;
+        }
         $accept = (static::option('accept', $options)) ?: true;
         return static::validateOrMessage(function($val) use ($accept) {
             return ($val == $accept);
@@ -18,6 +21,9 @@ class Validation {
     }
 
     public static function presence($options = array()) {
+        if (array_key_exists('optional', $options)) {
+            $options['optional'] = false;
+        }
         return static::validateOrMessage(function($val) {
             return (strlen($val) > 0);
         }, "can't be blank", $options);
@@ -168,7 +174,7 @@ class Validation {
 
     private static function validateOrMessage($validation_func, $default_msg, $options = array()) {
         $msg = (static::option('message', $options)) ?: $default_msg;
-        $blank = (static::option('allow_blank', $options)) ?: false;
+        $blank = (static::option('optional', $options)) ?: false;
         return function($val) use ($validation_func, $msg, $blank) {
             if ($blank && strlen($val) === 0) {
                 return true;
