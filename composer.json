@@ -3,7 +3,7 @@
     "description": "A simple HTML form validator",
     "keywords": ["HTML", "form", "validator", "validation"],
     "homepage": "https://github.com/jridgewell/FormValidator",
-    "license": "Beerware",
+    "license": "MIT",
     "authors": [
         {
             "name": "Justin Ridgewell"
