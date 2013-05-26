@@ -142,7 +142,7 @@ class Validation {
 
     public static function confirmation($other_field_func, $options = array()) {
         return static::validateOrMessage(function($val) use ($other_field_func) {
-            return ($val === $other_field_func());
+            return ($val === call_user_func($other_field_func));
         }, "doesn't match confirmation", $options);
     }
 
@@ -179,7 +179,7 @@ class Validation {
             if ($blank && strlen($val) === 0) {
                 return true;
             }
-            $ret = $validation_func($val);
+            $ret = call_user_func($validation_func, $val);
             if ($ret === true) {
                 return true;
             }
