@@ -45,12 +45,12 @@ class Validation {
                 return (strlen($val) >= $x);
             }, "is the wrong length (should be ${x} characters)");
         }
-        if ($x = static::option('min', $options)) {
+        if ($x = static::option('minimum', $options)) {
             $checks[] = static::validateOrMessage(function($val) use ($x) {
                 return (strlen($val) >= $x);
             }, "is too short (minimum is ${x} characters)");
         }
-        if ($x = static::option('max', $options)) {
+        if ($x = static::option('maximum', $options)) {
             $checks[] = static::validateOrMessage(function($val) use ($x) {
                 return (strlen($val) <= $x);
             }, "is too long (maximum is ${x} characters)");
