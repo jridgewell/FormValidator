@@ -48,7 +48,7 @@ class Validation {
 
         if ($x = static::option('is', $options)) {
             $checks[] = static::validateOrMessage(function($val) use ($x) {
-                return (strlen($val) >= $x);
+                return (strlen($val) == $x);
             }, "is the wrong length (should be ${x} characters)");
         }
         if ($x = static::option('minimum', $options)) {
