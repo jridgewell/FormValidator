@@ -61,6 +61,15 @@ In this example, the form validator checks if `name` isn't empty
 method, we preserve whatever value was in that field (**except for
 password fields**)
 
+## Installation
+
+### Via Composer
+
+    composer require "jridgewell/form-validator:~1.0"
+
+Then just add `require 'vendor/autoload.php';` to any code that requires
+FormValidator.
+
 
 ## The Validations Array
 
