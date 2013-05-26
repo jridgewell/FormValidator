@@ -18,9 +18,11 @@ In this example, the form validator checks if `name` isn't empty
     use \FormValidator\Validation;
 
     class TestForm extends \FormValidator\Form {
-        public $validations = array( // Contains a hash array of form elements
-            "name" => Validation::presence() // name field must contain something
-        );
+        public function __construct() {
+            $this->validations = array( // Contains a hash array of form elements
+                "name" => Validation::presence() // name field must contain something
+            );
+        }
     }
 ?>
 ```
@@ -81,13 +83,15 @@ rules to an element by using an array.
 ```php
 <?php
     class TestForm extends Form{
-        public $validations = array(
-            'name' => Validation::presence(),
-            'age'   => array( //Specifiy multiple rules
-                Validation::presence(),
-                Validation::numericality()
-            )
-        );
+        public function __construct() {
+            $this->validations = array(
+                'name' => Validation::presence(),
+                'age'   => array( //Specifiy multiple rules
+                    Validation::presence(),
+                    Validation::numericality()
+                )
+            );
+        }
     }
 ?>
 ```
@@ -118,27 +122,29 @@ Please see the validation for acceptable parameters.
 ```php
 <?php
     class TestForm extends Form {
-        public $validations = array(
-            'name' => Validation::length(array(
-                'minimum'  => 0,
-                'maximum' => 100
-            )),
-            'age'   => Validation::numericality(array(
-                'optional' => true,
-                'only_integer' => true
-            )),
-            'username' => Validation::exclusion(array(
-                'admin',
-                'superuser'
-            ), array(
-                'message' => 'You are not our master!'
-            ))
-        );
+        public function __construct() {
+            $this->validations = array(
+                'name' => Validation::length(array(
+                    'minimum'  => 0,
+                    'maximum' => 100
+                )),
+                'age'   => Validation::numericality(array(
+                    'optional' => true,
+                    'only_integer' => true
+                )),
+                'username' => Validation::exclusion(array(
+                    'admin',
+                    'superuser'
+                ), array(
+                    'message' => 'You are not our master!'
+                ))
+            );
+        }
     }
 ?>
 ```
 
-## List of valid `$validations`
+## List of validations
 
 ### Simple Validations
 
@@ -374,11 +380,13 @@ Please see the validation for acceptable parameters.
 <?php
     // TestForm.php
     class TestForm extends Form{
-        public $validations = array(
-            'password' => Validation::confirmation(function() {
-                return $_POST['password_confirmation'];
-            })
-        );
+        public function __construct() {
+            $this->validations = array(
+                'password' => Validation::confirmation(function() {
+                    return $_POST['password_confirmation'];
+                })
+            );
+        }
     }
 ?>
 ```
@@ -389,12 +397,14 @@ Please see the validation for acceptable parameters.
 <?php
     // TestForm.php
     class TestForm extends Form{
-        public $validations = array(
-            'usernames' => Validation::exclusion(array(
-                'admin',
-                'superuser'
-            ))
-        );
+        public function __construct() {
+            $this->validations = array(
+                'usernames' => Validation::exclusion(array(
+                    'admin',
+                    'superuser'
+                ))
+            );
+        }
     }
 ?>
 ```
@@ -405,9 +415,11 @@ Please see the validation for acceptable parameters.
 <?php
     // TestForm.php
     class TestForm extends Form{
-        public $validations = array(
-            'mp3Url' => Validation::format('/\.mp3$/')
-        );
+        public function __construct() {
+            $this->validations = array(
+                'mp3Url' => Validation::format('/\.mp3$/')
+            );
+        }
     }
 ?>
 ```
@@ -417,13 +429,15 @@ Please see the validation for acceptable parameters.
 ```php
 <?php
     class TestForm extends Form{
-        public $validations = array(
-            'usernames' => Validation::inclusion(array(
-                'Matt',
-                'Thor',
-                'Asa'
-            ))
-        );
+        public function __construct() {
+            $this->validations = array(
+                'usernames' => Validation::inclusion(array(
+                    'Matt',
+                    'Thor',
+                    'Asa'
+                ))
+            );
+        }
     }
 ?>
 ```
@@ -439,14 +453,16 @@ for the field.
 ```php
 <?php
     class TestForm extends Form {
-        public $validations = array(
-            'checkCustom' => Validation::validate_with(function($val) {
-                if ($val === 'supahSecret') {
-                    return true;
-                } 
-                return (substr($val, 0, 2) == 'st');
-            })
-        );
+        public function __construct() {
+            $this->validations = array(
+                'checkCustom' => Validation::validate_with(function($val) {
+                    if ($val === 'supahSecret') {
+                        return true;
+                    }
+                    return (substr($val, 0, 2) == 'st');
+                })
+            );
+        }
     }
 ?>
 ```

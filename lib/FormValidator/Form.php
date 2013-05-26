@@ -50,6 +50,10 @@ class Form {
     ### Pubilc Methods #############################################################
     ################################################################################
 
+    public function __construct($validations = array()) {
+        $this->validations = $validations;
+    }
+
     /**
      * Returns true if this form has posted
      * @return Boolean
