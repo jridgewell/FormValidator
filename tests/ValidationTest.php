@@ -144,7 +144,7 @@ class StackTest extends PHPUnit_Framework_TestCase {
         $testForm = new TestForm();
 
         // Min
-        $testForm->addToValidation('test', array(Validation::length(array('min' => 1))));
+        $testForm->addToValidation('test', array(Validation::length(array('minimum' => 1))));
 
         // test is less than 1, should create an error
         $testForm->validate();
@@ -161,7 +161,7 @@ class StackTest extends PHPUnit_Framework_TestCase {
         $this->assertFalse($testForm->hasErrors());
 
         // Max
-        $testForm->addToValidation('test', array(Validation::length(array('max' => 5))));
+        $testForm->addToValidation('test', array(Validation::length(array('maximum' => 5))));
 
         // test is greater than 5, should create an error
         $_POST['test'] = '123456';
@@ -180,7 +180,7 @@ class StackTest extends PHPUnit_Framework_TestCase {
         $this->assertFalse($testForm->hasErrors());
 
         // Min and Max
-        $testForm->addToValidation('test', array(Validation::length(array('max' => 5, 'min' => 1))));
+        $testForm->addToValidation('test', array(Validation::length(array('maximum' => 5, 'minimum' => 1))));
 
         // test is less than 1, should create an error
         $_POST['test'] = '';
@@ -270,7 +270,7 @@ class StackTest extends PHPUnit_Framework_TestCase {
                 'test2',
                 'testing'
             )),
-            Validation::length(array('min' => 2))
+            Validation::length(array('minimum' => 2))
         ));
 
         // test isn't in list, should create an error
