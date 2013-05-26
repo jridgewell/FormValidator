@@ -135,7 +135,7 @@ class Form {
      * Creates an submit button that this class can identify
      * @param Mixed $elementAttributes
      */
-    public function submitButton($value = 'Submit', $elementAttributes=array()) {
+    public function submitButton($value = 'Submit', $elementAttributes = array()) {
         if (isset($value)) {
             $elementAttributes['value'] = $value;
         }
@@ -148,7 +148,7 @@ class Form {
      * @param String $name
      * @param array $elementAttributes
      */
-    public function input($name, $elementAttributes=array()) {
+    public function input($name, $elementAttributes = array()) {
         $defaultAttributes = array(
             'name'  => $name,
             'type'  => 'text',
@@ -192,7 +192,7 @@ class Form {
      * @param array $elementAttributes
      * @param array $values
      */
-    public function select($name, $elementAttributes=array(), $values=array()) {
+    public function select($name, $values = array(), $elementAttributes = array()) {
         $defaultAttributes = array(
             'name' => $name,
             'class' => ''
