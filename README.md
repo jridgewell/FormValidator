@@ -1,9 +1,10 @@
 # FormValidator [![Build Status](https://travis-ci.org/jridgewell/FormValidator.png?branch=master)](https://travis-ci.org/jridgewell/FormValidator)
 
 FormValidator allows you to create and validate forms using a simple
-rule based approach.
+rule based approach. It uses an API very similar to Rails' ActiveRecord.
 
 ## Basics
+
 ### Setting up your first form
 
 A form file is just a class that extends the \FormValidator\Form class
