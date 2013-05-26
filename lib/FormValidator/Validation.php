@@ -3,9 +3,6 @@
 namespace FormValidator;
 
 class Validation {
-    /**
-     * The validation rules that can be used
-     */
     public static function anything() {
         // No need for anything fancy
         return function() {
@@ -140,9 +137,11 @@ class Validation {
     }
 
 
-    ############################################################################
-    # Non-ActiveRecord Validations
-    ############################################################################
+
+    ################################################################################
+    ### Non-ActiveRecord Validations ###############################################
+    ################################################################################
+
     public static function url($options = array()) {
         return static::validateOrMessage(function($val) {
             return (filter_var($val, FILTER_VALIDATE_URL) !== false);
@@ -157,9 +156,10 @@ class Validation {
 
 
 
-    ############################################################################
-    # Private Functions
-    ############################################################################
+    ################################################################################
+    ### Private Methods ############################################################
+    ################################################################################
+
     private static function option($name, $options) {
         return (array_key_exists($name, $options)) ? $options[$name] : null;
     }
