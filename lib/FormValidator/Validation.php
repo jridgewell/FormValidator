@@ -23,32 +23,18 @@ class Validation {
         }, "can't be blank", $options);
     }
 
-    public static function format($regex, $options = array()) {
-        return static::validateOrMessage(function($val) use ($regex) {
-            return (preg_match($regex, $val) === 1);
-        }, 'is invalid', $options);
+    // Non-ActiveRecord Validation
+    public static function url($options = array()) {
+        return static::validateOrMessage(function($val) {
+            return (filter_var($val, FILTER_VALIDATE_URL) !== false);
+        }, 'must be a url', $options);
     }
 
-    public static function confirmation($other_field_func, $options = array()) {
-        return static::validateOrMessage(function($val) use ($other_field_func) {
-            return $val === $other_field_func();
-        }, "doesn't match confirmation", $options);
-    }
-
-    public static function inclusion($list, $options = array()) {
-        return static::validateOrMessage(function($val) use ($list) {
-            return in_array($val, $list);
-        }, 'is not included in the list', $options);
-    }
-
-    public static function exclusion($list, $options = array()) {
-        return static::validateOrMessage(function($val) use ($list) {
-            return !in_array($val, $list);
-        }, 'is reserved', $options);
-    }
-
-    public static function validate_with($func, $options = array()) {
-        return static::validateOrMessage($func, null, $options);
+    // Non-ActiveRecord Validation
+    public static function email($options = array()) {
+        return static::validateOrMessage(function($val) {
+            return (filter_var($val, FILTER_VALIDATE_EMAIL) !== false);
+        }, 'must be an email', $options);
     }
 
     public static function length($options = array()) {
@@ -139,19 +125,35 @@ class Validation {
 
 
     ################################################################################
-    ### Non-ActiveRecord Validations ###############################################
+    ### Validations Require a Parameter ############################################
     ################################################################################
 
-    public static function url($options = array()) {
-        return static::validateOrMessage(function($val) {
-            return (filter_var($val, FILTER_VALIDATE_URL) !== false);
-        }, 'must be a url', $options);
+    public static function format($regex, $options = array()) {
+        return static::validateOrMessage(function($val) use ($regex) {
+            return (preg_match($regex, $val) === 1);
+        }, 'is invalid', $options);
     }
 
-    public static function email($options = array()) {
-        return static::validateOrMessage(function($val) {
-            return (filter_var($val, FILTER_VALIDATE_EMAIL) !== false);
-        }, 'must be an email', $options);
+    public static function confirmation($other_field_func, $options = array()) {
+        return static::validateOrMessage(function($val) use ($other_field_func) {
+            return ($val === $other_field_func());
+        }, "doesn't match confirmation", $options);
+    }
+
+    public static function inclusion($list, $options = array()) {
+        return static::validateOrMessage(function($val) use ($list) {
+            return in_array($val, $list);
+        }, 'is not included in the list', $options);
+    }
+
+    public static function exclusion($list, $options = array()) {
+        return static::validateOrMessage(function($val) use ($list) {
+            return !in_array($val, $list);
+        }, 'is reserved', $options);
+    }
+
+    public static function validate_with($func, $options = array()) {
+        return static::validateOrMessage($func, null, $options);
     }
 
 
