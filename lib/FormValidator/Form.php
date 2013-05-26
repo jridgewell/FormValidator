@@ -241,11 +241,14 @@ class Form {
      */
     protected function validationWalk($validation, $key, $fieldName) {
         if (is_callable($validation)) {
-            $postedData = $this->getDataForName($key, $_POST);
-            $this->setDataForName($postedData, $key, $this->data);
+            if (strlen($fieldName) === 0) {
+                $fieldName = $key;
+            }
+            $postedData = $this->getDataForName($fieldName, $_POST);
+            $this->setDataForName($postedData, $fieldName, $this->data);
             $ret = $validation($postedData);
             if ($ret !== true) {
-                $this->invalidateElement($key, $ret);
+                $this->invalidateElement($fieldName, $ret);
             }
         } else {
             if ($key === '[]') {
@@ -282,7 +285,7 @@ class Form {
         }
         foreach ($pieces as $piece) {
             $piece = preg_replace('/\]$/', '', $piece);
-            if (!array_key_exists($piece, $base)) {
+            if (!isset($base)) {
                 if (!$create) {
                     $base = null;
                     break;
