@@ -155,6 +155,8 @@ class StackTest extends PHPUnit_Framework_TestCase {
             'false',
             's',
             'a very long string',
+            '@test.com',
+            'test@test'
         );
         foreach ($invalids as $invalid) {
             $this->assertNotTrue($validation($invalid), "Validation::email shouldn't validate things that aren't emails");
@@ -223,7 +225,6 @@ class StackTest extends PHPUnit_Framework_TestCase {
             'a very long string',
         );
         foreach ($invalids as $invalid) {
-            echo "$invalid\n";
             $this->assertNotTrue($validation($invalid), "Validation::length (maximum) shouldn't validate data that is longer than {maximum}");
         }
 
@@ -273,6 +274,7 @@ class StackTest extends PHPUnit_Framework_TestCase {
             'false',
             's',
             'a very long string',
+            '12 string string'
         );
         foreach ($invalids as $invalid) {
             $this->assertNotTrue($validation($invalid), "Validation::numericality shouldn't validate things that aren't numbers");
