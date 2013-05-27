@@ -30,13 +30,6 @@ class Validation {
     }
 
     // Non-ActiveRecord Validation
-    public static function url($options = array()) {
-        return static::validateOrMessage(function($val) {
-            return (filter_var($val, FILTER_VALIDATE_URL) !== false);
-        }, 'must be a url', $options);
-    }
-
-    // Non-ActiveRecord Validation
     public static function email($options = array()) {
         return static::validateOrMessage(function($val) {
             return (filter_var($val, FILTER_VALIDATE_EMAIL) !== false);
