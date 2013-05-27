@@ -249,13 +249,15 @@ class Form {
             if (strlen($fieldName) === 0) {
                 $fieldName = $key;
             }
-            $postedData = $this->getDataForName($fieldName, $_POST);
+
             // This allows a field to have either a array of validations,
             // or a single validation.
-            if (is_array($postedData) && array_key_exists($key, $postedData)) {
-                $postedData = $postedData[$key];
-                $fieldName .= sprintf("[%s]", $key);
+            $fieldValidations = $this->getDataForName($fieldName, $this->validations);
+            if ($this->is_associative_array($fieldValidations)) {
+                $fieldName = sprintf('%s[%s]', $fieldName, $key);
             }
+
+            $postedData = $this->getDataForName($fieldName, $_POST);
             $this->setDataForName($postedData, $fieldName, $this->data);
             $ret = $validation($postedData);
             if ($ret !== true) {
@@ -272,6 +274,13 @@ class Form {
                 array_walk($validation, array($this, 'validationWalk'), $fName);
             }
         }
+    }
+
+    protected function is_associative_array($array) {
+        if (is_array($array)) {
+            return (bool)count(array_filter(array_keys($array), 'is_string'));
+        }
+        return false;
     }
 
     /**
