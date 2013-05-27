@@ -88,7 +88,7 @@ class StackTest extends PHPUnit_Framework_TestCase {
         $this->assertNotTrue($validation($blank_string), "Validation::acceptance shouldn't validate a blank string, even with optional => true");
     }
 
-    public function testValidationAcceptanceWithAccept() {
+    public function testValidationAcceptanceAccept() {
         $validation = Validation::acceptance(array('accept' => 'yes'));
 
         $invalids = array(
@@ -191,7 +191,7 @@ class StackTest extends PHPUnit_Framework_TestCase {
         }
     }
 
-    public function testValidationLengthWithIs() {
+    public function testValidationLengthIs() {
         $validation = Validation::length(array('is' => 3));
 
         $invalids = array(
@@ -215,7 +215,7 @@ class StackTest extends PHPUnit_Framework_TestCase {
         }
     }
 
-    public function testValidationLengthWithMaximum() {
+    public function testValidationLengthMaximum() {
         $validation = Validation::length(array('maximum' => 3));
 
         $invalids = array(
@@ -240,7 +240,7 @@ class StackTest extends PHPUnit_Framework_TestCase {
         }
     }
 
-    public function testValidationLengthWithMinimum() {
+    public function testValidationLengthMinimum() {
         $validation = Validation::length(array('minimum' => 3));
 
         $invalids = array(
