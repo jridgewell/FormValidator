@@ -291,6 +291,27 @@ class StackTest extends PHPUnit_Framework_TestCase {
         }
     }
 
+    public function testValidationNumericalityOnlyInteger() {
+        $validation = Validation::numericality(array('only_integer' => true));
+
+        $invalids = array(
+            '0.1',
+            '1.2',
+        );
+        foreach ($invalids as $invalid) {
+            $this->assertNotTrue($validation($invalid), "Validation::numericality (only_integer) shouldn't validate floats");
+        }
+
+        $valids = array(
+            '0',
+            '1',
+            '2',
+        );
+        foreach ($valids as $valid) {
+            $this->assertTrue($validation($valid), "Validation::numericality (only_integers) should validate integers");
+        }
+    }
+
     public function testValidationNumericalityEven() {
         $validation = Validation::numericality(array('even' => true));
 
@@ -316,6 +337,73 @@ class StackTest extends PHPUnit_Framework_TestCase {
         $valids = array('1', '3', '5', '7', '9');
         foreach ($valids as $valid) {
             $this->assertTrue($validation($valid), "Validation::numericality (odd) should validate odd numbers");
+        }
+    }
+
+    public function testValidationNumericalityEqualTo() {
+        $validation = Validation::numericality(array('equal_to' => 3));
+
+        $invalids = array('1', '2', '4', '5');
+        foreach ($invalids as $invalid) {
+            $this->assertNotTrue($validation($invalid), "Validation::numericality (equal_to) shouldn't validate numbers that aren't {equal_to}");
+        }
+
+        $this->assertTrue($validation(3), "Validation::numericality (equal_to) should validate {equal_to}");
+    }
+
+    public function testValidationNumericalityLessThan() {
+        $validation = Validation::numericality(array('less_than' => 3));
+
+        $invalids = array('3', '4', '5');
+        foreach ($invalids as $invalid) {
+            $this->assertNotTrue($validation($invalid), "Validation::numericality (less_than) shouldn't validate numbers greater than or equal to {less_than}");
+        }
+
+        $valids = array('0', '1', '2');
+        foreach ($valids as $valid) {
+            $this->assertTrue($validation($valid), "Validation::numericality (less_than) should validate numbers less than {less_than}");
+        }
+    }
+
+    public function testValidationNumericalityLessThanOrEqualTo() {
+        $validation = Validation::numericality(array('less_than_or_equal_to' => 3));
+
+        $invalids = array('4', '5', '6');
+        foreach ($invalids as $invalid) {
+            $this->assertNotTrue($validation($invalid), "Validation::numericality (less_than_or_equal_to) shouldn't validate numbers greater than {less_than_or_equal_to}");
+        }
+
+        $valids = array('1', '2', '3');
+        foreach ($valids as $valid) {
+            $this->assertTrue($validation($valid), "Validation::numericality (less_than_or_equal_to) should validate numbers less than or equal to {less_than_or_equal_to}");
+        }
+    }
+
+    public function testValidationNumericalityGreaterThan() {
+        $validation = Validation::numericality(array('greater_than' => 3));
+
+        $invalids = array('1', '2', '3');
+        foreach ($invalids as $invalid) {
+            $this->assertNotTrue($validation($invalid), "Validation::numericality (greater_than) shouldn't validate numbers less than or equal to {greater_than}");
+        }
+
+        $valids = array('4', '5', '6');
+        foreach ($valids as $valid) {
+            $this->assertTrue($validation($valid), "Validation::numericality (greater_than) should validate numbers greater than {greater_than}");
+        }
+    }
+
+    public function testValidationNumericalityGreaterThanOrEqualTo() {
+        $validation = Validation::numericality(array('greater_than_or_equal_to' => 3));
+
+        $invalids = array('0', '1', '2');
+        foreach ($invalids as $invalid) {
+            $this->assertNotTrue($validation($invalid), "Validation::numericality (greater_than_or_equal_to) shouldn't validate numbers less than {greater_than_or_equal_to}");
+        }
+
+        $valids = array('3', '4', '5');
+        foreach ($valids as $valid) {
+            $this->assertTrue($validation($valid), "Validation::numericality (greater_than_or_equal_to) should validate numbers greater than or equal to {greater_than_or_equal_to}");
         }
     }
 }
