@@ -68,11 +68,13 @@ class Validation {
 
     public static function numericality($options = array()) {
         $checks = array();
-        $filter = (static::option('only_integer', $options) === true) ? FILTER_VALIDATE_INT : FILTER_VALIDATE_FLOAT;
+        $only_integer = static::option('only_integer', $options);
+        $int_or_float = ($only_integer) ? 'integer' : 'number';
 
-        $checks[] = static::validateOrMessage(function($val) use ($filter) {
+        $checks[] = static::validateOrMessage(function($val) use ($only_integer) {
+            $filter = ($only_integer) ? FILTER_VALIDATE_INT : FILTER_VALIDATE_FLOAT;
             return (filter_var($val, $filter) !== false);
-        }, 'is not a number');
+        }, 'is not a ${int_or_float}');
 
         if (static::option('odd', $options)) {
             $checks[] = static::validateOrMessage(function($val) {
