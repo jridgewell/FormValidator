@@ -160,41 +160,33 @@ class Form
      */
     public function input($name, $elementAttributes = array())
     {
-        $defaultAttributes = array(
-            'name'  => $name,
-            'type'  => 'text',
-            'class' => '',
-            'value' => ''
+        $type = (array_key_exists('type', $elementAttributes)) ? $elementAttributes['type'] : 'text';
+        $value = (array_key_exists('value', $elementAttributes)) ? $elementAttributes['value'] : '';
+        $attributes = $this->toHTMLAttributes(
+            $name,
+            $elementAttributes,
+            array(
+                'name'  => $name,
+                'type'  => $type,
+                'class' => '',
+            )
         );
-        $attributes = array_merge($defaultAttributes, $elementAttributes);
-
-        // Add the error class if the element has an error
-        if ($this->elementHasError($name)) {
-            $attributes['class'] .= ' ' . $this->cssErrorClass;
-        }
 
         // Preserve the saved values if the form fails validation
         // EXCEPT for password fields
-        $value = '';
-        if ($attributes['type'] != 'password') {
+        if ($type != 'password') {
             $data = $this->getDataForName($name, $this->data);
             if (isset($data)) {
                 $value = htmlentities($data, ENT_QUOTES);
             }
         }
 
-        // Convert the name/value key pairs into strings
-        $a = array();
-        foreach ($attributes as $name => $value) {
-            $a[] = sprintf('%s="%s"', $name, htmlentities($value, ENT_QUOTES));
-        }
-
         // Handle textarea needing a different value format
         if ($attributes['type'] == 'textarea') {
-            echo '<textarea ' . implode(' ', $a) . '>' . $value . '</textarea>';
+            echo '<textarea ' . implode(' ', $attributes) . ">$value</textarea>";
         } else {
-            $a[] = sprintf('%s="%s"', 'value', $value);
-            echo '<input ' . implode(' ', $a) . ' />';
+            $attributes[] = sprintf('%s="%s"', 'value', $value);
+            echo '<input ' . implode(' ', $attributes) . ' />';
         }
     }
 
@@ -205,16 +197,14 @@ class Form
      */
     public function select($name, $values = array(), $elementAttributes = array())
     {
-        $defaultAttributes = array(
-            'name' => $name,
-            'class' => ''
+        $attributes = $this->toHTMLAttributes(
+            $name,
+            $elementAttributes,
+            array(
+                'name'  => $name,
+                'class' => '',
+            )
         );
-        $attributes = array_merge($defaultAttributes, $elementAttributes);
-
-        // Add the error class if the element has an error
-        if ($this->elementHasError($name)) {
-            $attributes['class'] .= ' ' . $this->cssErrorClass;
-        }
 
         $selected = array();
         $data = $this->getDataForName($name, $this->data);
@@ -222,21 +212,15 @@ class Form
             $selected = (is_array($data)) ? $data : array($data);
         }
 
-        // Convert the name/value key pairs into strings
-        $a = array();
-        foreach ($attributes as $name => $value) {
-            $a[] = sprintf('%s="%s"', $name, htmlentities($value, ENT_QUOTES));
-        }
-
         // Echo out the first part of the select element
-        echo '<select ' . implode(' ', $a) . ">\n";
+        echo '<select ' . implode(' ', $attributes) . ">\n";
 
         // Echo out the values included within the select element
         foreach ($values as $value => $text) {
             $selectedText = (in_array($text, $selected)) ? 'selected="selected"' : '';
             printf("<option %s>%s</option>\n", $selectedText, $name);
         }
-        echo '</select>' . "\n";
+        echo "</select>\n";
     }
 
 
@@ -283,6 +267,25 @@ class Form
                 array_walk($validation, array($this, 'validationWalk'), $fName);
             }
         }
+    }
+
+    private function toHTMLAttributes($name, $elementAttributes, $defaultAttributes = array())
+    {
+        $attributes = array_merge($defaultAttributes, $elementAttributes);
+
+        // Add the error class if the element has an error
+        if ($this->elementHasError($name)) {
+            $elementClass = (array_key_exists('class', $attributes)) ? $attributes['class'] : '';
+            $class .= " $this->cssErrorClass";
+            $attributes['class'] = $class;
+        }
+
+        // Convert the name/value key pairs into strings
+        $a = array();
+        foreach ($attributes as $name => $value) {
+            $a[] = sprintf('%s="%s"', $name, htmlentities($value, ENT_QUOTES));
+        }
+        return $a;
     }
 
     private function isAssociativeArray($array)
