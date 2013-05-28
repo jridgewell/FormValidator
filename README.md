@@ -155,12 +155,12 @@ Please see the validation for acceptable parameters.
         <th>Description</th>
     </tr>
     <tr>
-        <td>Validation::anything()</td>
-        <td>No options</td>
-        <td>This field is always valid</td>
+        <td><p>Validation::anything()</p></td>
+        <td><p>No options</p></td>
+        <td><p>This field is always valid</p></td>
     </tr>
     <tr>
-        <td>Validation::acceptance()</td>
+        <td><p>Validation::acceptance()</p></td>
         <td>
             <dl>
                 <dt>message => 'message'</dt>
@@ -170,10 +170,10 @@ Please see the validation for acceptable parameters.
                     with. Defaults to true</dd>
             </dl>
         </td>
-        <td>This field must be accepted (truthy)</td>
+        <td><p>This field must be accepted (truthy)</p></td>
     </tr>
     <tr>
-        <td>Validation::email()</td>
+        <td><p>Validation::email()</p></td>
         <td>
             <dl>
                 <dt>message => 'message'</dt>
@@ -183,10 +183,10 @@ Please see the validation for acceptable parameters.
                     blank, will preform the validations.</dd>
             </dl>
         </td>
-        <td>This field must be a valid email</td>
+        <td><p>This field must be a valid email</p></td>
     </tr>
     <tr>
-        <td>Validation::length()</td>
+        <td><p>Validation::length()</p></td>
         <td>
             <dl>
                 <dt>message => 'message'</dt>
@@ -202,11 +202,11 @@ Please see the validation for acceptable parameters.
                     <dd>The length of this field must be at most (>=) $x</dd>
             </dl>
         </td>
-        <td>This field's number of characters must be in the supplied
-        range. If no options are passed, this field will always be valid</td>
+        <td><p>This field's number of characters must be in the supplied
+        range. If no options are passed, this field will always be valid</p></td>
     </tr>
     <tr>
-        <td>Validation::numericality()</td>
+        <td><p>Validation::numericality()</p></td>
         <td>
             <dl>
                 <dt>message => 'message'</dt>
@@ -233,20 +233,20 @@ Please see the validation for acceptable parameters.
                     <dd>The number must be greater than or equal to $x</dd>
             </dl>
         </td>
-        <td>This field must be a number</td>
+        <td><p>This field must be a number</p></td>
     </tr>
     <tr>
-        <td>Validation::presence()</td>
+        <td><p>Validation::presence()</p></td>
         <td>
             <dl>
                 <dt>message => 'message'</dt>
                     <dd>Use a custom error message</dd>
             </dl>
         </td>
-        <td>This field must not be empty</td>
+        <td><p>This field must not be empty</p></td>
     </tr>
     <tr>
-        <td>Validation::url()</td>
+        <td><p>Validation::url()</p></td>
         <td>
             <dl>
                 <dt>message => 'message'</dt>
@@ -256,7 +256,7 @@ Please see the validation for acceptable parameters.
                     blank, will preform the validations.</dd>
             </dl>
         </td>
-        <td>This field must be a valid url</td>
+        <td><p>This field must be a valid url</p></td>
     </tr>
 </table>
 
@@ -270,10 +270,10 @@ Please see the validation for acceptable parameters.
         <th>Description</th>
     </tr>
     <tr>
-        <td>Validation::confirmation($other_field_func)</td>
+        <td><p>Validation::confirmation($func)</p></td>
         <td>
             <dl>
-                <dt>$other_field_func</dt>
+                <dt>$func</dt>
                     <dd>A (callable) callback to match against. It's
                     return value will be type and value checked
                     (===) against this field</dd>
@@ -288,10 +288,10 @@ Please see the validation for acceptable parameters.
                     blank, will preform the validations.</dd>
             </dl>
         </td>
-        <td>This field must match the return value of $other_field_func.
-        Useful for confirming a password in a second field.</td> </tr>
+        <td><p>This field must match the return value of $other_field_func.
+        Useful for confirming a password in a second field.</p></td> </tr>
     <tr>
-        <td>Validation::exclusion($array)</td>
+        <td><p>Validation::exclusion($array)</p></td>
         <td>
             <dl>
                 <dt>$array</dt>
@@ -307,11 +307,11 @@ Please see the validation for acceptable parameters.
                     blank, will preform the validations.</dd>
             </dl>
         </td>
-        <td> This field must not be equal (==) to a value inside
-        $array.</td>
+        <td><p>This field must not be equal (==) to a value inside
+        $array.</p></td>
     </tr>
     <tr>
-        <td>Validation::format($regex)</td>
+        <td><p>Validation::format($regex)</p></td>
         <td>
             <dl>
                 <dt>$regex</dt>
@@ -327,10 +327,10 @@ Please see the validation for acceptable parameters.
                     blank, will preform the validations.</dd>
             </dl>
         </td>
-        <td>This field must match against the supplied $regex</td>
+        <td><p>This field must match against the supplied $regex</p></td>
     </tr>
     <tr>
-        <td>Validation::inclusion($array)</td>
+        <td><p>Validation::inclusion($array)</p></td>
         <td>
             <dl>
                 <dt>$array</dt>
@@ -346,11 +346,11 @@ Please see the validation for acceptable parameters.
                     blank, will preform the validations.</dd>
             </dl>
         </td>
-        <td> This field must be equal (==) to a value inside
-        $array.</td>
+        <td><p>This field must be equal (==) to a value inside
+        $array.</p></td>
     </tr>
     <tr>
-        <td>Validation::validate_with($func)</td>
+        <td><p>Validation::validate_with($func)</p></td>
         <td>
             <dl>
                 <dt>$func</dt>
@@ -366,9 +366,9 @@ Please see the validation for acceptable parameters.
                     blank, will preform the validations.</dd>
             </dl>
         </td>
-        <td>This validation allows for a custom function to preform the
+        <td><p>This validation allows for a custom function to preform the
         field validation. It's return value must be (===) true, or else
-        it will use the return value as the field's error message</td>
+        it will use the return value as the field's error message</p></td>
     </tr>
 </table>
 
