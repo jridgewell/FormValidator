@@ -3,12 +3,12 @@
 define('__ROOT__', dirname(dirname(__FILE__)));
 
 require_once __ROOT__.'/vendor/autoload.php';
-require_once __ROOT__.'/tests/TestForm.php';
 
 use \FormValidator\Validation;
 
 class StackTest extends PHPUnit_Framework_TestCase {
 
+    // A helper function
     public function assertNotTrue($condition, $message = '') {
         $this->assertTrue($condition !== true, $message);
     }
@@ -405,5 +405,135 @@ class StackTest extends PHPUnit_Framework_TestCase {
         foreach ($valids as $valid) {
             $this->assertTrue($validation($valid), "Validation::numericality (greater_than_or_equal_to) should validate numbers greater than or equal to {greater_than_or_equal_to}");
         }
+    }
+
+    public function testValidationFormat() {
+        $validation = Validation::format('/\A[\d,.]+\Z/');
+
+        $invalids = array(
+            'string',
+            '',
+            '1 string',
+        );
+        foreach ($invalids as $invalid) {
+            $this->assertNotTrue($validation($invalid), "Validation::format should not validate things that don't match the regex");
+        }
+
+        $valids = array(
+            '1',
+            '1,000',
+            '1,000.1',
+        );
+        foreach ($valids as $valid) {
+            $this->assertTrue($validation($valid), "Validation::format should validate things that match the regex");
+        }
+    }
+
+    public function testValidationConfirmation() {
+        $_POST = array('password_confirmation' => '');
+        $validation = Validation::confirmation(function() {
+            return $_POST['password_confirmation'];
+        });
+
+        $invalids = array(
+            '',
+            'not equals',
+        );
+        foreach ($invalids as $invalid) {
+            $_POST['password_confirmation'] = $invalid;
+            $this->assertNotTrue($validation('password'), "Validation::confirmation should not validate when the return value doesn't match the field");
+        }
+
+        $_POST['password_confirmation'] = 'password';
+        $this->assertTrue($validation('password'), "Validation::confirmation should validate when the return value matches the field");
+    }
+
+    public function testValidationInclusion() {
+        $validation = Validation::inclusion(array(
+            'This is valid',
+            'so is this',
+            'and, finally, this',
+        ));
+
+        $invalids = array(
+            'string',
+            '',
+            '1 string',
+        );
+        foreach ($invalids as $invalid) {
+            $this->assertNotTrue($validation($invalid), "Validation::inclusion should not validate things that aren't inside the array");
+        }
+
+        $valids = array(
+            'This is valid',
+            'so is this',
+            'and, finally, this',
+        );
+        foreach ($valids as $valid) {
+            $this->assertTrue($validation($valid), "Validation::inclusion should validate things that are inside the array");
+        }
+    }
+
+    public function testValidationExclusion() {
+        $validation = Validation::exclusion(array(
+            'This isnt valid',
+            'neither is this',
+            'or, finally, this',
+        ));
+
+        $invalids = array(
+            'This isnt valid',
+            'neither is this',
+            'or, finally, this',
+        );
+        foreach ($invalids as $invalid) {
+            $this->assertNotTrue($validation($invalid), "Validation::exclusion should not validate things that are inside the array");
+        }
+
+        $valids = array(
+            'This is valid',
+            'so is this',
+            'and, finally, this',
+        );
+        foreach ($valids as $valid) {
+            $this->assertTrue($validation($valid), "Validation::exclusion should validate things that aren't inside the array");
+        }
+    }
+
+    public function testValidationValidateWith() {
+        $validation = Validation::validate_with(function($val) {
+            if ($val == 'letmein') {
+                return true;
+            }
+            return "You can't come in!";
+        });
+
+        $invalids = array(
+            '',
+            '0',
+            '0.1',
+            '1',
+            '1.2',
+            'true',
+            'false',
+            's',
+            'a very long string',
+        );
+        foreach ($invalids as $invalid) {
+            $this->assertNotTrue($validation($invalid), "Validation::validate_with should not validate things unless the function `return true;`");
+        }
+
+        $valid = 'letmein';
+        $this->assertTrue($validation($valid), "Validation::validate_with should validate when the function `return true;`");
+    }
+
+    public function testValidationValidateWithErrorReturnValue() {
+        $error = "You can't come in!";
+        $validation = Validation::validate_with(function($val) use ($error) {
+            return $error;
+        });
+
+        $invalid = 'letmein';
+        $this->assertEquals($error, $validation($invalid), "Validation::validate_with should return the return value of the function");
     }
 }
