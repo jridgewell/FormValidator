@@ -242,7 +242,7 @@ class Form
 
 
     ################################################################################
-    ### Protected Methods ##########################################################
+    ### Private Methods ############################################################
     ################################################################################
 
     /**
@@ -251,7 +251,7 @@ class Form
      * @param String $key
      * @param String $name
      */
-    protected function validationWalk($validation, $key, $fieldName)
+    private function validationWalk($validation, $key, $fieldName)
     {
         if (is_callable($validation)) {
             //If this is a key in the root of $validations
@@ -285,7 +285,7 @@ class Form
         }
     }
 
-    protected function isAssociativeArray($array)
+    private function isAssociativeArray($array)
     {
         if (is_array($array)) {
             return (bool)count(array_filter(array_keys($array), 'is_string'));
@@ -298,7 +298,7 @@ class Form
      * @param String $name
      * @param String $error
      */
-    protected function invalidateElement($name, $error)
+    private function invalidateElement($name, $error)
     {
         $element = &$this->getDataForName($name, $this->errors);
         if (isset($element)) {
@@ -309,7 +309,7 @@ class Form
         }
     }
 
-    protected function &getDataForName($name, &$base, $create = false)
+    private function &getDataForName($name, &$base, $create = false)
     {
         $pieces = explode('[', $name);
         if ($pieces[0] === '') {
@@ -329,7 +329,7 @@ class Form
         return $base;
     }
 
-    protected function setDataForName($data, $name, &$base)
+    private function setDataForName($data, $name, &$base)
     {
         $base = &$this->getDataForName($name, $base, true);
         $base = $data;
