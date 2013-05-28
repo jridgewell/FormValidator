@@ -153,7 +153,7 @@ class Validation {
         }, 'is reserved', $options);
     }
 
-    public static function validate_with($func, $options = array()) {
+    public static function validateWith($func, $options = array()) {
         return static::validateOrMessage($func, null, $options);
     }
 

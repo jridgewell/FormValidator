@@ -22,7 +22,7 @@ class ValidationTest extends PHPUnit_Framework_TestCase {
             'confirmation',
             'inclusion',
             'exclusion',
-            'validate_with',
+            'validateWith',
         );
         $optional = array(
             'optional' => true
@@ -501,7 +501,7 @@ class ValidationTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testValidationValidateWith() {
-        $validation = Validation::validate_with(function($val) {
+        $validation = Validation::validateWith(function($val) {
             if ($val == 'letmein') {
                 return true;
             }
@@ -520,20 +520,20 @@ class ValidationTest extends PHPUnit_Framework_TestCase {
             'a very long string',
         );
         foreach ($invalids as $invalid) {
-            $this->assertNotTrue($validation($invalid), "Validation::validate_with should not validate things unless the function `return true;`");
+            $this->assertNotTrue($validation($invalid), "Validation::validateWith should not validate things unless the function `return true;`");
         }
 
         $valid = 'letmein';
-        $this->assertTrue($validation($valid), "Validation::validate_with should validate when the function `return true;`");
+        $this->assertTrue($validation($valid), "Validation::validateWith should validate when the function `return true;`");
     }
 
     public function testValidationValidateWithErrorReturnValue() {
         $error = "You can't come in!";
-        $validation = Validation::validate_with(function($val) use ($error) {
+        $validation = Validation::validateWith(function($val) use ($error) {
             return $error;
         });
 
         $invalid = 'letmein';
-        $this->assertEquals($error, $validation($invalid), "Validation::validate_with should return the return value of the function");
+        $this->assertEquals($error, $validation($invalid), "Validation::validateWith should return the return value of the function");
     }
 }

@@ -350,7 +350,7 @@ Please see the validation for acceptable parameters.
         $array.</p></td>
     </tr>
     <tr>
-        <td><p>Validation::validate_with($func)</p></td>
+        <td><p>Validation::validateWith($func)</p>/td>
         <td>
             <dl>
                 <dt>$func</dt>
@@ -442,7 +442,7 @@ Please see the validation for acceptable parameters.
 ?>
 ```
 
-##### Validation::validate_with($func)
+##### Validation::validateWith($func)
 
 This validation requires a (callable) callback. This callback is
 then provided with the submitted field data as it's only parameter. The
@@ -455,7 +455,7 @@ for the field.
     class TestForm extends Form {
         public function __construct() {
             $this->validations = array(
-                'checkCustom' => Validation::validate_with(function($val) {
+                'checkCustom' => Validation::validateWith(function($val) {
                     if ($val === 'supahSecret') {
                         return true;
                     }
