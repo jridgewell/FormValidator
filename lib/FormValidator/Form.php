@@ -54,6 +54,10 @@ class Form {
         $this->validations = $validations;
     }
 
+    public function __get($name) {
+        return $this->getDataForName("[$name]", $this->data);
+    }
+
     /**
      * Returns true if this form has posted
      * @return Boolean
