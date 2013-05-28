@@ -257,7 +257,7 @@ class Form {
             // This allows a field to have either a array of validations,
             // or a single validation.
             $fieldValidations = $this->getDataForName($fieldName, $this->validations);
-            if ($this->is_associative_array($fieldValidations)) {
+            if ($this->isAssociativeArray($fieldValidations)) {
                 $fieldName = sprintf('%s[%s]', $fieldName, $key);
             }
 
@@ -280,7 +280,7 @@ class Form {
         }
     }
 
-    protected function is_associative_array($array) {
+    protected function isAssociativeArray($array) {
         if (is_array($array)) {
             return (bool)count(array_filter(array_keys($array), 'is_string'));
         }
