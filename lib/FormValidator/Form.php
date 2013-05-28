@@ -1,17 +1,11 @@
 <?php
 
-/**
- * @author Matt Labrum <matt@labrum.me>
- * @author Justin Ridgewell
- * @license Beerware
- * @link url
- */
-
 namespace FormValidator;
 
 use \FormValidator\Validation;
 
-class Form {
+class Form
+{
 
     /**
      * Stores the name of the css error to be included on elements that don't pass validation
@@ -50,11 +44,13 @@ class Form {
     ### Pubilc Methods #############################################################
     ################################################################################
 
-    public function __construct($validations = array()) {
+    public function __construct($validations = array())
+    {
         $this->validations = $validations;
     }
 
-    public function __get($name) {
+    public function __get($name)
+    {
         return $this->getDataForName("[$name]", $this->data);
     }
 
@@ -62,7 +58,8 @@ class Form {
      * Returns true if this form has posted
      * @return Boolean
      */
-    public function hasPosted() {
+    public function hasPosted()
+    {
         return isset($_POST[get_class($this)]);
     }
 
@@ -70,7 +67,8 @@ class Form {
      * Returns true if the form has validation errors
      * @return Boolean
      */
-    public function hasErrors() {
+    public function hasErrors()
+    {
         return (count($this->errors) > 0);
     }
 
@@ -79,7 +77,8 @@ class Form {
      * @param String $name
      * @return Boolean
      */
-    public function elementHasError($name) {
+    public function elementHasError($name)
+    {
         $error = $this->getDataForName($name, $this->errors);
         return isset($error);
     }
@@ -88,7 +87,8 @@ class Form {
      * validates the form against the current validation rules
      * @return array
      */
-    public function validate() {
+    public function validate()
+    {
         $this->errors = array();
         array_walk(
             $this->validations,
@@ -114,7 +114,8 @@ class Form {
      * @param String $name
      * @param String $message
      */
-    public function error($name, $message = null) {
+    public function error($name, $message = null)
+    {
         $errors = $this->getDataForName($name, $this->errors);
         if (isset($error)) {
             $output = array();
@@ -143,7 +144,8 @@ class Form {
      * Creates an submit button that this class can identify
      * @param Mixed $elementAttributes
      */
-    public function submitButton($value = 'Submit', $elementAttributes = array()) {
+    public function submitButton($value = 'Submit', $elementAttributes = array())
+    {
         if (isset($value)) {
             $elementAttributes['value'] = $value;
         }
@@ -156,7 +158,8 @@ class Form {
      * @param String $name
      * @param array $elementAttributes
      */
-    public function input($name, $elementAttributes = array()) {
+    public function input($name, $elementAttributes = array())
+    {
         $defaultAttributes = array(
             'name'  => $name,
             'type'  => 'text',
@@ -200,7 +203,8 @@ class Form {
      * @param array $elementAttributes
      * @param array $values
      */
-    public function select($name, $values = array(), $elementAttributes = array()) {
+    public function select($name, $values = array(), $elementAttributes = array())
+    {
         $defaultAttributes = array(
             'name' => $name,
             'class' => ''
@@ -247,7 +251,8 @@ class Form {
      * @param String $key
      * @param String $name
      */
-    protected function validationWalk($validation, $key, $fieldName) {
+    protected function validationWalk($validation, $key, $fieldName)
+    {
         if (is_callable($validation)) {
             //If this is a key in the root of $validations
             if (strlen($fieldName) === 0) {
@@ -273,14 +278,15 @@ class Form {
             } else {
                 $postedKeys = array($key);
             }
-            foreach($postedKeys as $key) {
+            foreach ($postedKeys as $key) {
                 $fName = sprintf('%s[%s]', $fieldName, $key);
                 array_walk($validation, array($this, 'validationWalk'), $fName);
             }
         }
     }
 
-    protected function isAssociativeArray($array) {
+    protected function isAssociativeArray($array)
+    {
         if (is_array($array)) {
             return (bool)count(array_filter(array_keys($array), 'is_string'));
         }
@@ -292,7 +298,8 @@ class Form {
      * @param String $name
      * @param String $error
      */
-    protected function invalidateElement($name, $error) {
+    protected function invalidateElement($name, $error)
+    {
         $element = &$this->getDataForName($name, $this->errors);
         if (isset($element)) {
             $element[] = $error;
@@ -302,7 +309,8 @@ class Form {
         }
     }
 
-    protected function &getDataForName($name, &$base, $create = false) {
+    protected function &getDataForName($name, &$base, $create = false)
+    {
         $pieces = explode('[', $name);
         if ($pieces[0] === '') {
             array_shift($pieces);
@@ -321,7 +329,8 @@ class Form {
         return $base;
     }
 
-    protected function setDataForName($data, $name, &$base) {
+    protected function setDataForName($data, $name, &$base)
+    {
         $base = &$this->getDataForName($name, $base, true);
         $base = $data;
     }
