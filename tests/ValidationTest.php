@@ -1,15 +1,15 @@
 <?php
 
-define('__ROOT__', dirname(dirname(__FILE__)));
+if(!defined('__ROOT__')) define('__ROOT__', dirname(dirname(__FILE__)));
 
 require_once __ROOT__.'/vendor/autoload.php';
 
 use \FormValidator\Validation;
 
-class StackTest extends PHPUnit_Framework_TestCase {
+class ValidationTest extends PHPUnit_Framework_TestCase {
 
     // A helper function
-    public function assertNotTrue($condition, $message = '') {
+    protected function assertNotTrue($condition, $message = '') {
         $this->assertTrue($condition !== true, $message);
     }
 
