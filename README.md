@@ -5,12 +5,10 @@ rule based approach. It uses an API very similar to Rails' ActiveRecord.
 
 ## Basics
 
-### Setting up your first form
-
 A form file is just a class that extends the \FormValidator\Form class
 In this example, the form validator checks if `name` isn't empty
 
-#### test.form.php (the model)
+### test.form.php (the model)
 
 ```php
 <?php
@@ -27,7 +25,7 @@ In this example, the form validator checks if `name` isn't empty
 ?>
 ```
 
-#### index.php (the controller)
+### index.php (the controller)
 
 ```php
 <?php
@@ -48,7 +46,7 @@ In this example, the form validator checks if `name` isn't empty
 ?>
 ```
 
-#### form.html.php (the view)
+### form.html.php (the view)
 
 ```php
     <form name='input' method='POST'>
@@ -59,9 +57,14 @@ In this example, the form validator checks if `name` isn't empty
     </form>
 ```
 
-**Note:** If the form fails validation, by using the `$form->input`
-method, we preserve whatever value was in that field (**except for
-password fields**)
+#### About the View
+
+1. If the form fails validation, by using the `$form->input` method, we
+   preserve whatever value the user typed into that field (**except for
+   password fields**)
+2. The form **must** have a field with the name attribute set to the
+   name of the form class (`name="TestForm"` in our example). Using the
+   `$form->submit` method takes care of this requirement.
 
 ## Installation
 
@@ -372,9 +375,9 @@ Please see the validation for acceptable parameters.
     </tr>
 </table>
 
-#### Advanced Examples
+### Advanced Validation Examples
 
-##### Validation::confirmation($other_field_func)
+#### Validation::confirmation($other_field_func)
 
 ```php
 <?php
@@ -391,7 +394,7 @@ Please see the validation for acceptable parameters.
 ?>
 ```
 
-##### Validation::exclusion($array)
+#### Validation::exclusion($array)
 
 ```php
 <?php
@@ -409,7 +412,7 @@ Please see the validation for acceptable parameters.
 ?>
 ```
 
-##### Validation::format($regex)
+#### Validation::format($regex)
 
 ```php
 <?php
@@ -424,7 +427,7 @@ Please see the validation for acceptable parameters.
 ?>
 ```
 
-##### Validation::inclusion($array)
+#### Validation::inclusion($array)
 
 ```php
 <?php
@@ -442,7 +445,7 @@ Please see the validation for acceptable parameters.
 ?>
 ```
 
-##### Validation::validateWith($func)
+#### Validation::validateWith($func)
 
 This validation requires a (callable) callback. This callback is
 then provided with the submitted field data as it's only parameter. The
