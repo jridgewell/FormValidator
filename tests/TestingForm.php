@@ -8,6 +8,6 @@ class TestingForm extends \FormValidator\Form {
     }
 
     public function addValidation($key, $value) {
-        $this->setDataForName($key, $value);
+        $this->setDataForName($key, $value, $this->validations);
     }
 }
