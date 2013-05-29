@@ -12,13 +12,13 @@ class Form
      * Will also be included in the $this->error() output
      * @var String
      */
-    public $cssErrorClass = 'error';
+    protected $cssErrorClass = 'error';
 
     /**
      * Stores the tagname that wil wrap error messages
      * @var String
      */
-    public $errorWrapperTag = 'p';
+    protected $errorWrapperTag = 'p';
 
     /**
      * Stores any errors the form has after validation
@@ -44,11 +44,19 @@ class Form
     ### Pubilc Methods #############################################################
     ################################################################################
 
+    /**
+     * Convenience constructor to set $this->validations
+     * @param Mixed $validations
+     */
     public function __construct($validations = array())
     {
         $this->validations = $validations;
     }
 
+    /**
+     * Convenience method to get posted form data
+     * @param String $name
+     */
     public function __get($name)
     {
         return $this->getDataForName("[$name]", $this->data);
@@ -64,21 +72,16 @@ class Form
     }
 
     /**
-     * Returns true if the form has validation errors
-     * @return Boolean
-     */
-    public function hasErrors()
-    {
-        return (count($this->errors) > 0);
-    }
-
-    /**
-     * //TODO
+     * If $name is supplied, returns true if $name has a validation error
+     * Else, returns true if the form has validation errors
      * @param String $name
      * @return Boolean
      */
-    public function elementHasError($name)
+    public function hasError($name = null)
     {
+        if (!$name) {
+            return (count($this->errors) > 0);
+        }
         $error = $this->getDataForName($name, $this->errors);
         return isset($error);
     }
@@ -100,7 +103,7 @@ class Form
             $this->verify($this->data);
         }
         // Return the data if there isn't any errors
-        return (!$this->hasErrors()) ? $this->data : null;
+        return (!$this->hasError()) ? $this->data : null;
     }
 
 
@@ -117,15 +120,22 @@ class Form
     public function error($name, $message = null)
     {
         $errors = $this->getDataForName($name, $this->errors);
-        if (isset($error)) {
-            $output = array();
-            $prettyName = '';
+        if (isset($errors)) {
             if ($message) {
-                $errors = array($message);
-            } else {
-                preg_match('/(\w+)\]?$', $name, $matches);
-                $prettyName = ucwords($matches[1]);
+                printf(
+                    '<%s class="%s">%s</%s>',
+                    $this->errorWrapperTag,
+                    $this->cssErrorClass,
+                    $message,
+                    $this->errorWrapperTag
+                );
+                return;
             }
+
+            $output = array();
+            preg_match('/(\w+)\]?$/', $name, $matches);
+            $prettyName = ucwords($matches[1]);
+
             foreach ($errors as $error) {
                 $output[] = sprintf(
                     '<%s class="%s">%s %s</%s>',
@@ -144,10 +154,10 @@ class Form
      * Creates an submit button that this class can identify
      * @param Mixed $elementAttributes
      */
-    public function submitButton($value = 'Submit', $elementAttributes = array())
+    public function submitButton($value = null, $elementAttributes = array())
     {
-        if (isset($value)) {
-            $elementAttributes['value'] = $value;
+        if (!isset($value)) {
+            $elementAttributes['value'] = 'Submit';
         }
         $elementAttributes['type'] = 'submit';
         $this->input(get_class($this), $elementAttributes);
@@ -182,7 +192,7 @@ class Form
         }
 
         // Handle textarea needing a different value format
-        if ($attributes['type'] == 'textarea') {
+        if ($elementAttributes['type'] == 'textarea') {
             echo '<textarea ' . implode(' ', $attributes) . ">$value</textarea>";
         } else {
             $attributes[] = sprintf('%s="%s"', 'value', $value);
@@ -274,7 +284,7 @@ class Form
         $attributes = array_merge($defaultAttributes, $elementAttributes);
 
         // Add the error class if the element has an error
-        if ($this->elementHasError($name)) {
+        if ($this->hasError($name)) {
             $elementClass = (array_key_exists('class', $attributes)) ? $attributes['class'] : '';
             $class .= " $this->cssErrorClass";
             $attributes['class'] = $class;
@@ -283,6 +293,10 @@ class Form
         // Convert the name/value key pairs into strings
         $a = array();
         foreach ($attributes as $name => $value) {
+            if ($name == 'value') {
+                // Taken care of in output itself...
+                continue;
+            }
             $a[] = sprintf('%s="%s"', $name, htmlentities($value, ENT_QUOTES));
         }
         return $a;
