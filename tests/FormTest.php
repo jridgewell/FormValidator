@@ -3,6 +3,7 @@
 if(!defined('__ROOT__')) define('__ROOT__', dirname(dirname(__FILE__)));
 
 require_once __ROOT__.'/vendor/autoload.php';
+require_once 'TestingForm.php';
 
 use \FormValidator\Form;
 
@@ -18,6 +19,10 @@ class FormTest extends PHPUnit_Framework_TestCase {
     // Make sure each test has a new form to play with
     protected function setUp() {
         $this->form = new TestingForm();
+    }
+
+    public function testTruth() {
+        $this->assertTrue(true, 'get off my back while I write these...');
     }
 
 }
