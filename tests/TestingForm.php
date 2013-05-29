@@ -8,8 +8,9 @@ class TestingForm extends \FormValidator\Form {
     }
 
     public function addValidation($key, $value) {
+        $args = array($value, $key, &$this->validations);
         $method = static::getMethod('setDataForName');
-        $method->invoke($this, $value, $key, &$this->validations);
+        $method->invokeArgs($this, $args);
     }
 
     public function getValidations() {
