@@ -53,7 +53,7 @@ In this example, the form validator checks if `name` isn't empty
     <?php $form->error('name', 'There was an error'); ?>
 
     Please Enter your name: <?php $form->input('name'); ?><br/>
-    <?php $form->submitButton('Submit');?>
+    <?php $form->submit('Submit');?>
     </form>
 ```
 
@@ -111,7 +111,7 @@ we could do the following:
     <?php $form->error('age', 'This is an optional custom message about age'); ?>
 
     Please Enter your age: <?php $form->input('age'); ?><br/>
-    <?php $form->submitButton('Submit');?>
+    <?php $form->submit('Submit');?>
     </form>
 ?>
 ```

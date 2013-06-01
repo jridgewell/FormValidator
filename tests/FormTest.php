@@ -94,12 +94,20 @@ class FormTest extends PHPUnit_Framework_TestCase {
         $this->markTestIncomplete('This test has not been implemented yet.');
     }
 
+    public function testValidateNested() {
+        $this->markTestIncomplete();
+    }
+
+    public function testValidateMultipleValidations() {
+        $this->markTestIncomplete();
+    }
+
     public function testError() {
         $error = 'error';
         $this->form->addValidation('test', function() use ($error) {return $error;});
 
         $this->form->validate();
-        $this->expectOutputString('<p class="error">Test '. $error .'</p>');
+        $this->expectOutputRegex("/$error/");
 
         $this->form->error('test');
     }
@@ -110,7 +118,7 @@ class FormTest extends PHPUnit_Framework_TestCase {
         $this->form->addValidation($name, function() {return false;});
 
         $this->form->validate();
-        $this->expectOutputString('<p class="error">' . $properName . ' </p>');
+        $this->expectOutputRegex("/$properName/");
 
         $this->form->error($name);
     }
@@ -121,7 +129,7 @@ class FormTest extends PHPUnit_Framework_TestCase {
         $this->form->addValidation($name, function() {return false;});
 
         $this->form->validate();
-        $this->expectOutputString('<p class="error">' . $properName . ' </p>');
+        $this->expectOutputRegex("/$properName/");
 
         $this->form->error($name);
     }
@@ -131,7 +139,7 @@ class FormTest extends PHPUnit_Framework_TestCase {
         $this->form->addValidation('test', function() {return false;});
 
         $this->form->validate();
-        $this->expectOutputString('<p class="error">' . $errorMessage . '</p>');
+        $this->expectOutputRegex("/$errorMessage/");
 
         $this->form->error('test', $errorMessage);
     }
@@ -143,17 +151,117 @@ class FormTest extends PHPUnit_Framework_TestCase {
         ));
 
         $this->form->validate();
-        $this->expectOutputString(
-            '<p class="error">Test first</p>' . "\n" .
-            '<p class="error">Test second</p>'
-        );
+        $this->expectOutputRegex('/first.*second/');
 
         $this->form->error('test');
     }
 
-    public function testSubmitButton() {
+    public function testSubmit() {
+        $this->expectOutputRegex('/type="submit"/');
+        $this->form->submit();
+    }
+
+    public function testSubmitHasClassName() {
         $className = get_class($this->form);
-        $this->expectOutputString('<input name="' . $className . '" type="submit" class="" value="Submit" />');
-        $this->form->submitButton();
+        $this->expectOutputRegex("/name=\"$className\"/");
+        $this->form->submit();
+    }
+
+    public function testSubmitTakesValue() {
+        $value = 'testSubmit';
+        $this->expectOutputRegex("/value=\"$value\"/");
+        $this->form->submit($value);
+    }
+
+    public function testInput() {
+        $name = 'test';
+        $this->expectOutputRegex("/<input.*name=\"$name\"/");
+        $this->form->input($name);
+    }
+
+    public function testInputTakesType() {
+        $type = 'test';
+        $this->expectOutputRegex("/type=\"$type\"/");
+        $this->form->input('name', array('type' => $type));
+    }
+
+    public function testInputTakesValue() {
+        $value = 'test';
+        $this->expectOutputRegex("/value=\"$value\"/");
+        $this->form->input('name', array('value' => $value));
+    }
+
+    public function testInputTakesArbitraryAttribute() {
+        $attr = 'test';
+        $this->expectOutputRegex("/$attr=\"\"/");
+        $this->form->input('name', array($attr => ''));
+    }
+
+    public function testInputPreservesUserValueAfterSubmit() {
+        $value = 'User Entered Value';
+        $_POST['test'] = $value;
+        $this->form->addValidation('test', function() {return false;});
+
+        $this->form->validate();
+
+        $this->expectOutputRegex("/value=\"$value\"/");
+        $this->form->input('test');
+    }
+
+    public function testInputDoesntPreservesUserValueAfterPasswordSubmit() {
+        $value = 'User Entered Value';
+        $_POST['test'] = $value;
+        $this->form->addValidation('test', function() {return false;});
+
+        $this->form->validate();
+
+        $this->expectOutputRegex("/value=\"\"/");
+        $this->form->input('test', array('type' => 'password'));
+    }
+
+    public function testInputFormatsTextareaCorrectly() {
+        $this->expectOutputRegex('/<textarea/');
+        $this->form->input('test', array('type' => 'textarea'));
+    }
+
+    public function testSelect() {
+        $name = 'test';
+        $this->expectOutputRegex("/<select.*name=\"$name\"/");
+        $this->form->select($name);
+    }
+
+    public function testSelectTakesValues() {
+        $values = array('first', 'second');
+        $this->expectOutputRegex('/value="first".*value="second"/');
+        $this->form->select('name', $values);
+    }
+
+    public function testSelectTakesKeyAndValues() {
+        $values = array('f' => 'first', 's' => 'second');
+        $this->expectOutputRegex('/value="f".*value="s"/');
+        $this->form->select('name', $values);
+    }
+
+    public function testSelectPreservesSelected() {
+        $value = 'first';
+        $values = array($value, 'second');
+        $_POST['name'] = $value;
+        $this->form->addValidation('name', function() {return false;});
+
+        $this->form->validate();
+
+        $this->expectOutputRegex('/value="first"[^>]*selected="selected"/');
+        $this->form->select('name', $values);
+    }
+
+    public function testSelectPreservesMultipleSelected() {
+        $values = array('first', 'second');
+        $_POST['name'] = $values;
+        $this->form->addValidation('name', function() {return false;});
+
+        $this->form->validate();
+
+        $this->expectOutputRegex('/selected="selected".*selected="selected"/');
+        $this->form->select('name', $values);
     }
 }
