@@ -8,5 +8,5 @@
     <?php $form->error("user[homepage]"); ?>
     Have a homepage?: <?php $form->input("user[homepage]"); ?><br/>
 
-    <?php $form->submitButton("Submit");?>
+    <?php $form->submit("Submit");?>
 </form>

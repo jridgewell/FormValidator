@@ -146,7 +146,7 @@ class Form
                     $this->errorWrapperTag
                 );
             }
-            echo implode("\n", $output);
+            echo implode('', $output);
         }
     }
 
@@ -154,11 +154,12 @@ class Form
      * Creates an submit button that this class can identify
      * @param Mixed $elementAttributes
      */
-    public function submitButton($value = null, $elementAttributes = array())
+    public function submit($value = null, $elementAttributes = array())
     {
         if (!isset($value)) {
-            $elementAttributes['value'] = 'Submit';
+            $value = 'Submit';
         }
+        $elementAttributes['value'] = $value;
         $elementAttributes['type'] = 'submit';
         $this->input(get_class($this), $elementAttributes);
     }
@@ -170,21 +171,20 @@ class Form
      */
     public function input($name, $elementAttributes = array())
     {
-        $type = (array_key_exists('type', $elementAttributes)) ? $elementAttributes['type'] : 'text';
         $value = (array_key_exists('value', $elementAttributes)) ? $elementAttributes['value'] : '';
+        $elementAttributes['type'] = (array_key_exists('type', $elementAttributes)) ? $elementAttributes['type'] : 'text';
         $attributes = $this->toHTMLAttributes(
             $name,
             $elementAttributes,
             array(
                 'name'  => $name,
-                'type'  => $type,
                 'class' => '',
             )
         );
 
         // Preserve the saved values if the form fails validation
         // EXCEPT for password fields
-        if ($type != 'password') {
+        if ($elementAttributes['type'] != 'password') {
             $data = $this->getDataForName($name, $this->data);
             if (isset($data)) {
                 $value = htmlentities($data, ENT_QUOTES);
@@ -223,14 +223,17 @@ class Form
         }
 
         // Echo out the first part of the select element
-        echo '<select ' . implode(' ', $attributes) . ">\n";
+        echo '<select ' . implode(' ', $attributes) . '>';
 
         // Echo out the values included within the select element
-        foreach ($values as $value => $text) {
-            $selectedText = (in_array($text, $selected)) ? 'selected="selected"' : '';
-            printf("<option %s>%s</option>\n", $selectedText, $name);
+        $useKeys = $this->isAssociativeArray($values);
+        foreach ($values as $key => $text) {
+            $value = ($useKeys) ? $key : $text;
+            $selectedText = (in_array($value, $selected)) ? 'selected="selected"' : '';
+            $value = sprintf('value="%s"', $value);
+            printf('<option %s %s>%s</option>', $value, $selectedText, $text);
         }
-        echo "</select>\n";
+        echo '</select>';
     }
 
 
@@ -286,8 +289,8 @@ class Form
         // Add the error class if the element has an error
         if ($this->hasError($name)) {
             $elementClass = (array_key_exists('class', $attributes)) ? $attributes['class'] : '';
-            $class .= " $this->cssErrorClass";
-            $attributes['class'] = $class;
+            $elementClass .= " $this->cssErrorClass";
+            $attributes['class'] = $elementClass;
         }
 
         // Convert the name/value key pairs into strings
