@@ -308,7 +308,14 @@ class Form
     private function isAssociativeArray($array)
     {
         if (is_array($array)) {
-            return (bool)count(array_filter(array_keys($array), 'is_string'));
+            $i = 0;
+            $keys = array_keys($array);
+            foreach ($keys as $key) {
+                if ($key !== $i) {
+                    return true;
+                }
+                ++$i;
+            }
         }
         return false;
     }
