@@ -157,8 +157,9 @@ class Form
     public function submit($value = null, $elementAttributes = array())
     {
         if (!isset($value)) {
-            $elementAttributes['value'] = 'Submit';
+            $value = 'Submit';
         }
+        $elementAttributes['value'] = $value;
         $elementAttributes['type'] = 'submit';
         $this->input(get_class($this), $elementAttributes);
     }
