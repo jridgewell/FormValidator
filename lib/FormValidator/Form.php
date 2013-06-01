@@ -286,8 +286,8 @@ class Form
         // Add the error class if the element has an error
         if ($this->hasError($name)) {
             $elementClass = (array_key_exists('class', $attributes)) ? $attributes['class'] : '';
-            $class .= " $this->cssErrorClass";
-            $attributes['class'] = $class;
+            $elementClass .= " $this->cssErrorClass";
+            $attributes['class'] = $elementClass;
         }
 
         // Convert the name/value key pairs into strings
