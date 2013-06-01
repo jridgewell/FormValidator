@@ -154,7 +154,7 @@ class Form
      * Creates an submit button that this class can identify
      * @param Mixed $elementAttributes
      */
-    public function submitButton($value = null, $elementAttributes = array())
+    public function submit($value = null, $elementAttributes = array())
     {
         if (!isset($value)) {
             $elementAttributes['value'] = 'Submit';

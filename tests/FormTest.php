@@ -151,9 +151,9 @@ class FormTest extends PHPUnit_Framework_TestCase {
         $this->form->error('test');
     }
 
-    public function testSubmitButton() {
+    public function testSubmit() {
         $className = get_class($this->form);
         $this->expectOutputString('<input name="' . $className . '" type="submit" class="" value="Submit" />');
-        $this->form->submitButton();
+        $this->form->submit();
     }
 }
