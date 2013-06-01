@@ -226,11 +226,14 @@ class Form
         echo '<select ' . implode(' ', $attributes) . '>';
 
         // Echo out the values included within the select element
-        foreach ($values as $value => $text) {
-            $selectedText = (in_array($text, $selected)) ? 'selected="selected"' : '';
-            printf("<option %s>%s</option>\n", $selectedText, $name);
+        $useKeys = $this->isAssociativeArray($values);
+        foreach ($values as $key => $text) {
+            $value = ($useKeys) ? $key : $text;
+            $selectedText = (in_array($value, $selected)) ? 'selected="selected"' : '';
+            $value = sprintf('value="%s"', $value);
+            printf('<option %s %s>%s</option>', $value, $selectedText, $text);
         }
-        echo "</select>\n";
+        echo '</select>';
     }
 
 
