@@ -171,21 +171,20 @@ class Form
      */
     public function input($name, $elementAttributes = array())
     {
-        $type = (array_key_exists('type', $elementAttributes)) ? $elementAttributes['type'] : 'text';
         $value = (array_key_exists('value', $elementAttributes)) ? $elementAttributes['value'] : '';
+        $elementAttributes['type'] = (array_key_exists('type', $elementAttributes)) ? $elementAttributes['type'] : 'text';
         $attributes = $this->toHTMLAttributes(
             $name,
             $elementAttributes,
             array(
                 'name'  => $name,
-                'type'  => $type,
                 'class' => '',
             )
         );
 
         // Preserve the saved values if the form fails validation
         // EXCEPT for password fields
-        if ($type != 'password') {
+        if ($elementAttributes['type'] != 'password') {
             $data = $this->getDataForName($name, $this->data);
             if (isset($data)) {
                 $value = htmlentities($data, ENT_QUOTES);
