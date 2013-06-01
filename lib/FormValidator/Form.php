@@ -146,7 +146,7 @@ class Form
                     $this->errorWrapperTag
                 );
             }
-            echo implode("\n", $output);
+            echo implode('', $output);
         }
     }
 
@@ -223,7 +223,7 @@ class Form
         }
 
         // Echo out the first part of the select element
-        echo '<select ' . implode(' ', $attributes) . ">\n";
+        echo '<select ' . implode(' ', $attributes) . '>';
 
         // Echo out the values included within the select element
         foreach ($values as $value => $text) {
