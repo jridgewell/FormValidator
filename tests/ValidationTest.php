@@ -147,6 +147,7 @@ class ValidationTest extends PHPUnit_Framework_TestCase {
         $validation = Validation::email();
 
         $invalids = array(
+            '',
             '0',
             '0.1',
             '1',
@@ -491,6 +492,7 @@ class ValidationTest extends PHPUnit_Framework_TestCase {
         }
 
         $valids = array(
+            '',
             'This is valid',
             'so is this',
             'and, finally, this',
