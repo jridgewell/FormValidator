@@ -70,7 +70,7 @@ In this example, the form validator checks if `name` isn't empty
 
 ### Via Composer
 
-    composer require "jridgewell/form-validator:~1.0"
+    composer require "jridgewell/form-validator:1.*"
 
 Then just add `require 'vendor/autoload.php';` to any code that requires
 FormValidator.
