@@ -255,9 +255,10 @@ class Form
      */
     private function validationWalk($validation, $key, $fieldName)
     {
+        $isRootKey = (strlen($fieldName) === 0);
         if (is_callable($validation)) {
             //If this is a key in the root of $validations
-            if (strlen($fieldName) === 0) {
+            if ($isRootKey) {
                 $fieldName = $key;
             }
 
@@ -281,7 +282,11 @@ class Form
                 $postedKeys = array($key);
             }
             foreach ($postedKeys as $key) {
-                $fName = sprintf('%s[%s]', $fieldName, $key);
+                if ($isRootKey) {
+                    $fName = $key;
+                } else {
+                    $fName = sprintf('%s[%s]', $fieldName, $key);
+                }
                 array_walk($validation, array($this, 'validationWalk'), $fName);
             }
         }
