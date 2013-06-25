@@ -133,15 +133,12 @@ class Form
             }
 
             $output = array();
-            preg_match('/(\w+)\]?$/', $name, $matches);
-            $prettyName = ucwords($matches[1]);
 
             foreach ($errors as $error) {
                 $output[] = sprintf(
-                    '<%s class="%s">%s %s</%s>',
+                    '<%s class="%s">%s</%s>',
                     $this->errorWrapperTag,
                     $this->cssErrorClass,
-                    $prettyName,
                     $error,
                     $this->errorWrapperTag
                 );

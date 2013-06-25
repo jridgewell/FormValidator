@@ -112,28 +112,6 @@ class FormTest extends PHPUnit_Framework_TestCase {
         $this->form->error('test');
     }
 
-    public function testErrorGuessesName() {
-        $name = 'test';
-        $properName = ucwords($name);
-        $this->form->addValidation($name, function() {return false;});
-
-        $this->form->validate();
-        $this->expectOutputRegex("/$properName/");
-
-        $this->form->error($name);
-    }
-
-    public function testErrorGuessesNestedName() {
-        $name = 'test[name][er]';
-        $properName = 'Er';
-        $this->form->addValidation($name, function() {return false;});
-
-        $this->form->validate();
-        $this->expectOutputRegex("/$properName/");
-
-        $this->form->error($name);
-    }
-
     public function testErrorWithMessage() {
         $errorMessage = 'Custom error message';
         $this->form->addValidation('test', function() {return false;});
