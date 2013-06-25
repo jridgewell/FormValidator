@@ -91,15 +91,39 @@ class FormTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testValidate() {
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        $this->form->addValidation('test', \FormValidator\Validation::presence());
+        $_POST['test'] = 'is present';
+        $this->form->validate();
+        $this->assertFalse($this->form->hasError());
     }
 
     public function testValidateNested() {
-        $this->markTestIncomplete();
+        $this->form->addValidation('test', array('nested' => \FormValidator\Validation::presence()));
+        $_POST['test'] = array('nested' => 'is present');
+        $this->form->validate();
+        $this->assertFalse($this->form->hasError());
     }
 
     public function testValidateMultipleValidations() {
-        $this->markTestIncomplete();
+        $this->form->addValidation('test', array(\FormValidator\Validation::presence(), \FormValidator\Validation::numericality()));
+        $_POST['test'] = 'not a number';
+        $this->form->validate();
+        $this->assertTrue($this->form->hasError());
+
+        $_POST['test'] = '3';
+        $this->form->validate();
+        $this->assertFalse($this->form->hasError());
+    }
+
+    public function testValidateMultipleNestedValidations() {
+        $this->form->addValidation('test', array('nested' => array(\FormValidator\Validation::presence(), \FormValidator\Validation::numericality())));
+        $_POST['test'] = array('nested' => 'not a number');
+        $this->form->validate();
+        $this->assertTrue($this->form->hasError());
+
+        $_POST['test'] = array('nested' => '3');
+        $this->form->validate();
+        $this->assertFalse($this->form->hasError());
     }
 
     public function testError() {
