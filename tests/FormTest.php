@@ -91,21 +91,29 @@ class FormTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testValidate() {
-        $this->form->addValidation('test', \FormValidator\Validation::presence());
+        $presence = function($val) { return strlen($val) > 0; };
+        $this->form->addValidation('test', $presence);
         $_POST['test'] = 'is present';
+
         $this->form->validate();
+
         $this->assertFalse($this->form->hasError());
     }
 
     public function testValidateNested() {
-        $this->form->addValidation('test', array('nested' => \FormValidator\Validation::presence()));
+        $presence = function($val) { return strlen($val) > 0; };
+        $this->form->addValidation('test', array('nested' => $presence));
         $_POST['test'] = array('nested' => 'is present');
+
         $this->form->validate();
+
         $this->assertFalse($this->form->hasError());
     }
 
     public function testValidateMultipleValidations() {
-        $this->form->addValidation('test', array(\FormValidator\Validation::presence(), \FormValidator\Validation::numericality()));
+        $presence = function($val) { return strlen($val) > 0; };
+        $numericality = function($val) { return filter_var($val, FILTER_VALIDATE_INT) !== false; };
+        $this->form->addValidation('test', array($presence, $numericality));
         $_POST['test'] = 'not a number';
         $this->form->validate();
         $this->assertTrue($this->form->hasError());
@@ -116,7 +124,9 @@ class FormTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testValidateMultipleNestedValidations() {
-        $this->form->addValidation('test', array('nested' => array(\FormValidator\Validation::presence(), \FormValidator\Validation::numericality())));
+        $presence = function($val) { return strlen($val) > 0; };
+        $numericality = function($val) { return filter_var($val, FILTER_VALIDATE_INT) !== false; };
+        $this->form->addValidation('test', array('nested' => array($presence, $numericality)));
         $_POST['test'] = array('nested' => 'not a number');
         $this->form->validate();
         $this->assertTrue($this->form->hasError());
