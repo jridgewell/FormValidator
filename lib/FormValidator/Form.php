@@ -87,6 +87,14 @@ class Form
     }
 
     /**
+     * Return true if this form has no errors
+     * @return Boolean
+     */
+    public function isValid() {
+        return !$this->hasError();
+    }
+
+    /**
      * validates the form against the current validation rules
      * @return array
      */
