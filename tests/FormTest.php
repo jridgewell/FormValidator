@@ -19,6 +19,7 @@ class FormTest extends PHPUnit_Framework_TestCase {
     // Make sure each test has a new form to play with
     protected function setUp() {
         $this->form = new TestingForm();
+        $_POST = array();
     }
 
     public function testGetter() {
