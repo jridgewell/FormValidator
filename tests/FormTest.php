@@ -10,6 +10,8 @@ use \FormValidator\Form;
 class FormTest extends PHPUnit_Framework_TestCase {
 
     protected $form;
+    protected $presence = null;
+    protected $numericality = null;
 
     // A helper function
     protected function assertNotTrue($condition, $message = '') {
@@ -18,6 +20,12 @@ class FormTest extends PHPUnit_Framework_TestCase {
 
     // Make sure each test has a new form to play with
     protected function setUp() {
+        if (!isset($this->presence)) {
+            $this->presence = function($val) { return strlen($val) > 0; };
+        }
+        if (!isset($this->numericality)) {
+            $this->numericality = function($val) { return filter_var($val, FILTER_VALIDATE_INT) !== false; };
+        }
         $this->form = new TestingForm();
         $_POST = array();
     }
@@ -92,8 +100,7 @@ class FormTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testValidate() {
-        $presence = function($val) { return strlen($val) > 0; };
-        $this->form->addValidation('test', $presence);
+        $this->form->addValidation('test', $this->presence);
         $_POST['test'] = 'is present';
 
         $this->form->validate();
@@ -102,8 +109,7 @@ class FormTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testValidateNested() {
-        $presence = function($val) { return strlen($val) > 0; };
-        $this->form->addValidation('test', array('nested' => $presence));
+        $this->form->addValidation('test', array('nested' => $this->presence));
         $_POST['test'] = array('nested' => 'is present');
 
         $this->form->validate();
@@ -112,8 +118,7 @@ class FormTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testValidateUnspecifiedNestedDirect() {
-        $presence = function($val) { return strlen($val) > 0; };
-        $this->form->addValidation('unspec', array('[]' => $presence));
+        $this->form->addValidation('unspec', array('[]' => $this->presence));
         $_POST['unspec'] = array('first' => 'is present', 'second' => 'is present');
 
         $this->form->log = true;
@@ -125,8 +130,7 @@ class FormTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testValidateUnspecifiedNestedIndirect() {
-        $presence = function($val) { return strlen($val) > 0; };
-        $this->form->addValidation('unspec', array('[]' => array('name' => $presence)));
+        $this->form->addValidation('unspec', array('[]' => array('name' => $this->presence)));
         $ar = array('name' => 'is present');
         $_POST['unspec'] = array('first' => $ar, 'second' => $ar);
 
@@ -137,9 +141,7 @@ class FormTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testValidateMultipleValidations() {
-        $presence = function($val) { return strlen($val) > 0; };
-        $numericality = function($val) { return filter_var($val, FILTER_VALIDATE_INT) !== false; };
-        $this->form->addValidation('test', array($presence, $numericality));
+        $this->form->addValidation('test', array($this->presence, $this->numericality));
         $_POST['test'] = 'not a number';
 
         $this->form->validate();
@@ -151,9 +153,7 @@ class FormTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testValidateMultipleNestedValidations() {
-        $presence = function($val) { return strlen($val) > 0; };
-        $numericality = function($val) { return filter_var($val, FILTER_VALIDATE_INT) !== false; };
-        $this->form->addValidation('test', array('nested' => array($presence, $numericality)));
+        $this->form->addValidation('test', array('nested' => array($this->presence, $this->numericality)));
         $_POST['test'] = array('nested' => 'not a number');
         $this->form->validate();
         $this->assertTrue($this->form->hasError());
