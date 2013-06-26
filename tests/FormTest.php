@@ -105,7 +105,7 @@ class FormTest extends PHPUnit_Framework_TestCase {
 
         $this->form->validate();
 
-        $this->assertFalse($this->form->hasError());
+        $this->assertTrue($this->form->isValid());
     }
 
     public function testValidateNested() {
@@ -114,7 +114,16 @@ class FormTest extends PHPUnit_Framework_TestCase {
 
         $this->form->validate();
 
-        $this->assertFalse($this->form->hasError());
+        $this->assertTrue($this->form->isValid());
+    }
+
+    public function testValidateNestedFlat() {
+        $this->form->addValidation('test[nested]', $this->presence);
+        $_POST['test'] = array('nested' => 'is present');
+
+        $this->form->validate();
+
+        $this->assertTrue($this->form->isValid());
     }
 
     public function testValidateUnspecifiedNestedDirect() {
@@ -125,7 +134,7 @@ class FormTest extends PHPUnit_Framework_TestCase {
         $this->form->validate();
         $this->form->log = false;
 
-        $this->assertFalse($this->form->hasError());
+        $this->assertTrue($this->form->isValid());
         $this->assertEquals(2, count($this->form->unspec));
     }
 
@@ -136,7 +145,7 @@ class FormTest extends PHPUnit_Framework_TestCase {
 
         $this->form->validate();
 
-        $this->assertFalse($this->form->hasError());
+        $this->assertTrue($this->form->isValid());
         $this->assertEquals(2, count($this->form->unspec));
     }
 
@@ -149,7 +158,7 @@ class FormTest extends PHPUnit_Framework_TestCase {
 
         $_POST['test'] = '3';
         $this->form->validate();
-        $this->assertFalse($this->form->hasError());
+        $this->assertTrue($this->form->isValid());
     }
 
     public function testValidateMultipleNestedValidations() {
@@ -160,7 +169,7 @@ class FormTest extends PHPUnit_Framework_TestCase {
 
         $_POST['test'] = array('nested' => '3');
         $this->form->validate();
-        $this->assertFalse($this->form->hasError());
+        $this->assertTrue($this->form->isValid());
     }
 
     public function testError() {
