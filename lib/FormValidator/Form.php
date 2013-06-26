@@ -255,41 +255,39 @@ class Form
      */
     private function validationWalk($validation, $key, $fieldName)
     {
-        $isRootKey = (strlen($fieldName) === 0);
-        if (is_callable($validation)) {
-            //If this is a key in the root of $validations
-            if ($isRootKey) {
-                $fieldName = $key;
-            }
-
-            // This allows a field to have either a array of validations,
-            // or a single validation.
-            $fieldValidations = $this->getDataForName($fieldName, $this->validations);
-            if ($this->isAssociativeArray($fieldValidations)) {
-                $fieldName = sprintf('%s[%s]', $fieldName, $key);
-            }
-
-            $postedData = $this->getDataForName($fieldName, $_POST);
-            $this->setDataForName($postedData, $fieldName, $this->data);
-            $ret = $validation($postedData);
-            if ($ret !== true) {
-                $this->invalidateElement($fieldName, $ret);
-            }
+        if ($key === '[]') {
+            $postedKeys = array_keys($this->getDataForName($fieldName, $_POST));
         } else {
-            if ($key === '[]') {
-                $postedKeys = array_keys($this->getDataForName($fieldName, $_POST));
-            } else {
-                $postedKeys = array($key);
-            }
-            foreach ($postedKeys as $key) {
-                if ($isRootKey) {
-                    $fName = $key;
-                } else {
-                    $fName = sprintf('%s[%s]', $fieldName, $key);
-                }
+            $postedKeys = array($key);
+        }
+        foreach ($postedKeys as $key) {
+            $fName = $fieldName;
+            if (!is_callable($validation)) {
+                $fName = $this->toHTMLName($fName, $key);
                 array_walk($validation, array($this, 'validationWalk'), $fName);
+            } else {
+                // This allows a field to have either a array of validations,
+                // or a single validation.
+                $fieldValidations = $this->getDataForName($fieldName, $this->validations, array('isSafe' => true));
+                if ($this->isAssociativeArray($fieldValidations)) {
+                    $fName = $this->toHTMLName($fieldName, $key);
+                }
+
+                $postedData = $this->getDataForName($fName, $_POST);
+                $this->setDataForName($postedData, $fName, $this->data);
+                $ret = $validation($postedData);
+                if ($ret !== true) {
+                    $this->invalidateElement($fName, $ret);
+                }
             }
         }
+    }
+
+    private function toHTMLName($base, $nested) {
+        if (strlen($base) === 0) {
+            return $nested;
+        }
+        return sprintf('%s[%s]', $base, $nested);
     }
 
     private function toHTMLAttributes($name, $elementAttributes, $defaultAttributes = array())
@@ -346,20 +344,24 @@ class Form
         }
     }
 
-    private function &getDataForName($name, &$base, $create = false)
+    private function &getDataForName($name, &$base, $options = array())
     {
-        $pieces = explode('[', $name);
-        if ($pieces[0] === '') {
-            array_shift($pieces);
-        }
+        $create = (array_key_exists('create', $options) && $options['create']);
+        $isSafe = (array_key_exists('isSafe', $options) && $options['isSafe']);
+
+        preg_match_all('/[^\[\]]+/', $name, $pieces);
+        $pieces = array_shift($pieces);
         foreach ($pieces as $piece) {
-            $piece = preg_replace('/\]$/', '', $piece);
             if (!isset($base)) {
                 if (!$create) {
                     $base = null;
                     break;
                 }
                 $base[$piece] = array();
+            }
+            if ($isSafe && array_key_exists('[]', $base)) {
+                $base = &$base['[]'];
+                continue;
             }
             $base = &$base[$piece];
         }
@@ -368,7 +370,7 @@ class Form
 
     private function setDataForName($data, $name, &$base)
     {
-        $base = &$this->getDataForName($name, $base, true);
+        $base = &$this->getDataForName($name, $base, array('create' => true));
         $base = $data;
     }
 }
