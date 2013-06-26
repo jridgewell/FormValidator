@@ -90,7 +90,8 @@ class Form
      * Return true if this form has no errors
      * @return Boolean
      */
-    public function isValid() {
+    public function isValid()
+    {
         return !$this->hasError();
     }
 
@@ -177,13 +178,13 @@ class Form
     public function input($name, $elementAttributes = array())
     {
         $value = (array_key_exists('value', $elementAttributes)) ? $elementAttributes['value'] : '';
-        $elementAttributes['type'] = (array_key_exists('type', $elementAttributes)) ? $elementAttributes['type'] : 'text';
         $attributes = $this->toHTMLAttributes(
             $name,
             $elementAttributes,
             array(
                 'name'  => $name,
                 'class' => '',
+                'type' => 'text'
             )
         );
 
