@@ -178,19 +178,20 @@ class Form
     public function input($name, $elementAttributes = array())
     {
         $value = (array_key_exists('value', $elementAttributes)) ? $elementAttributes['value'] : '';
+        $type = (array_key_exists('type', $elementAttributes)) ? $elementAttributes['type'] : 'text';
         $attributes = $this->toHTMLAttributes(
             $name,
             $elementAttributes,
             array(
                 'name'  => $name,
                 'class' => '',
-                'type' => 'text'
+                'type' => $type
             )
         );
 
         // Preserve the saved values if the form fails validation
         // EXCEPT for password fields
-        if ($elementAttributes['type'] != 'password') {
+        if ($type != 'password') {
             $data = $this->getDataForName($name, $this->data);
             if (isset($data)) {
                 $value = htmlentities($data, ENT_QUOTES);
@@ -198,7 +199,7 @@ class Form
         }
 
         // Handle textarea needing a different value format
-        if ($elementAttributes['type'] == 'textarea') {
+        if ($type == 'textarea') {
             echo '<textarea ' . implode(' ', $attributes) . ">$value</textarea>";
         } else {
             $attributes[] = sprintf('%s="%s"', 'value', $value);
