@@ -117,15 +117,6 @@ class FormTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($this->form->isValid());
     }
 
-    public function testValidateNestedFlat() {
-        $this->form->addValidation('test[nested]', $this->presence);
-        $_POST['test'] = array('nested' => 'is present');
-
-        $this->form->validate();
-
-        $this->assertTrue($this->form->isValid());
-    }
-
     public function testValidateUnspecifiedNestedDirect() {
         $this->form->addValidation('unspec', array('[]' => $this->presence));
         $_POST['unspec'] = array('first' => 'is present', 'second' => 'is present');
@@ -171,6 +162,25 @@ class FormTest extends PHPUnit_Framework_TestCase {
         $this->form->validate();
         $this->assertTrue($this->form->isValid());
     }
+
+    public function testValidateNestedFlat() {
+        $this->form->addValidation('test[nested]', $this->presence);
+        $_POST['test'] = array('nested' => 'is present');
+
+        $this->form->validate();
+
+        $this->assertTrue($this->form->isValid());
+    }
+
+    public function testValidateNestedFlatWithMultipleValidations() {
+        $this->form->addValidation('test[nested]', array($this->presence, $this->numericality));
+        $_POST['test'] = array('nested' => '3');
+
+        $this->form->validate();
+
+        $this->assertTrue($this->form->isValid());
+    }
+
 
     public function testError() {
         $error = 'error';
