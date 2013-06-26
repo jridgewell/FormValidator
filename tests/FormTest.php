@@ -111,11 +111,37 @@ class FormTest extends PHPUnit_Framework_TestCase {
         $this->assertFalse($this->form->hasError());
     }
 
+    public function testValidateUnspecifiedNestedDirect() {
+        $presence = function($val) { return strlen($val) > 0; };
+        $this->form->addValidation('unspec', array('[]' => $presence));
+        $_POST['unspec'] = array('first' => 'is present', 'second' => 'is present');
+
+        $this->form->log = true;
+        $this->form->validate();
+        $this->form->log = false;
+
+        $this->assertFalse($this->form->hasError());
+        $this->assertEquals(2, count($this->form->unspec));
+    }
+
+    public function testValidateUnspecifiedNestedIndirect() {
+        $presence = function($val) { return strlen($val) > 0; };
+        $this->form->addValidation('unspec', array('[]' => array('name' => $presence)));
+        $ar = array('name' => 'is present');
+        $_POST['unspec'] = array('first' => $ar, 'second' => $ar);
+
+        $this->form->validate();
+
+        $this->assertFalse($this->form->hasError());
+        $this->assertEquals(2, count($this->form->unspec));
+    }
+
     public function testValidateMultipleValidations() {
         $presence = function($val) { return strlen($val) > 0; };
         $numericality = function($val) { return filter_var($val, FILTER_VALIDATE_INT) !== false; };
         $this->form->addValidation('test', array($presence, $numericality));
         $_POST['test'] = 'not a number';
+
         $this->form->validate();
         $this->assertTrue($this->form->hasError());
 
