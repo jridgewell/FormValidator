@@ -3,7 +3,7 @@
 if(!defined('__ROOT__')) define('__ROOT__', dirname(dirname(__FILE__)));
 
 require_once __ROOT__.'/vendor/autoload.php';
-require_once 'TestingForm.php';
+require_once 'fixtures/TestingForm.php';
 
 use \FormValidator\Form;
 
