@@ -245,7 +245,7 @@ class Form
 
 
     ################################################################################
-    ### Private Methods ############################################################
+    ### Protected Methods ##########################################################
     ################################################################################
 
     /**
@@ -254,7 +254,7 @@ class Form
      * @param String $key
      * @param String $name
      */
-    private function validationWalk($validation, $key, $fieldName)
+    protected function validationWalk($validation, $key, $fieldName)
     {
         if ($key === '[]') {
             $postedKeys = array_keys($this->getDataForName($fieldName, $_POST));
@@ -284,14 +284,15 @@ class Form
         }
     }
 
-    private function toHTMLName($base, $nested) {
+    protected function toHTMLName($base, $nested)
+    {
         if (strlen($base) === 0) {
             return $nested;
         }
         return sprintf('%s[%s]', $base, $nested);
     }
 
-    private function toHTMLAttributes($name, $elementAttributes, $defaultAttributes = array())
+    protected function toHTMLAttributes($name, $elementAttributes, $defaultAttributes = array())
     {
         $attributes = array_merge($defaultAttributes, $elementAttributes);
 
@@ -314,7 +315,7 @@ class Form
         return $a;
     }
 
-    private function isAssociativeArray($array)
+    protected function isAssociativeArray($array)
     {
         if (is_array($array)) {
             $i = 0;
@@ -334,7 +335,7 @@ class Form
      * @param String $name
      * @param String $error
      */
-    private function invalidateElement($name, $error)
+    protected function invalidateElement($name, $error)
     {
         $element = &$this->getDataForName($name, $this->errors);
         if (isset($element)) {
@@ -345,7 +346,7 @@ class Form
         }
     }
 
-    private function &getDataForName($name, &$base, $options = array())
+    protected function &getDataForName($name, &$base, $options = array())
     {
         $create = (array_key_exists('create', $options) && $options['create']);
         $isSafe = (array_key_exists('isSafe', $options) && $options['isSafe']);
@@ -369,7 +370,7 @@ class Form
         return $base;
     }
 
-    private function setDataForName($data, $name, &$base)
+    protected function setDataForName($data, $name, &$base)
     {
         $base = &$this->getDataForName($name, $base, array('create' => true));
         $base = $data;
